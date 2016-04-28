@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<table xmlns="http://schema.tqlab.com/mybatis" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://schema.tqlab.com/mybatis http://schema.tqlab.com/mybatis/tqlab-mybatis-plugin.xsd"
+	name="star">
+
+	<result objectName="StarMovies">
+		<property column="id" javaProperty="id" javaType="java.lang.Integer" />
+		<property column="firstname" javaProperty="firstname"
+			javaType="java.lang.String" />
+		<property column="lastname" javaProperty="lastname" javaType="java.lang.String" />
+		<property column="movieid" javaProperty="movieid" javaType="java.lang.Integer" />
+		<property column="title" javaProperty="title" javaType="java.lang.String" />
+	</result>
+
+	<operation id="deleteById">
+		<sql>
+			<![CDATA[
+			delete from star where id=#{id,jdbcType=INTEGER};
+			]]>
+		</sql>
+	</operation>
+
+	<operation id="count" many="false" resultType="int">
+		<sql>
+			<![CDATA[
+			select count(*) from star;
+			]]>
+		</sql>
+	</operation>
+
+	<operation id="sum" many="false"  resultType="java.lang.Integer">
+		<sql>
+			<![CDATA[
+			select sum(id) from star;
+			]]>
+		</sql>
+	</operation>
+
+	<operation id="selectAll" many="true">
+		<sql>
+			<![CDATA[
+			select * from star;
+			]]>
+		</sql>
+	</operation>
+
+	<operation id="selectById" many="false">
+		<sql>
+			<![CDATA[
+			select * from star where id=#{id,jdbcType=INTEGER};
+			]]>
+		</sql>
+	</operation>
+
+	<operation id="selectWithPagination">
+		<comment>
+			demo
+		</comment>
+		<sql>
+			<![CDATA[
+			select * from star limit #{size,jdbcType=INTEGER} OFFSET #{offset,jdbcType=INTEGER}
+			]]>
+		</sql>
+	</operation>
+
+	<operation id="selectComplex1" resultType="StarMovies" many="true">
+		<sql>
+			<![CDATA[
+			select a.*, b.* from star a, movies b where a.id = b.starid
+			]]>
+		</sql>
+	</operation>
+
+	<operation id="selectComplex2" many="true">
+		<result objectName="StarMovies2">
+			<property column="star_id" javaProperty="id" javaType="java.lang.Integer" />
+			<property column="name" javaProperty="firstname" javaType="java.lang.String" />
+			<property column="lastname" javaProperty="lastname"
+				javaType="java.lang.String" />
+			<property column="movieid" javaProperty="movieid" javaType="java.lang.Integer" />
+			<property column="title" javaProperty="title" javaType="java.lang.String" />
+		</result>
+		<sql>
+			<![CDATA[
+			select a.id as star_id, a.firstname as name, a.lastname, 
+			b.movieid, b.title from star a, movies b 
+			where a.id = b.starid
+			]]>
+		</sql>
+	</operation>
+
+	<operation id="searchByfirstname" many="true">
+		<params>
+			<param>#{obj,jdbcType=JAVA_OBJECT}</param>
+		</params>
+		<sql>
+			<![CDATA[
+				<script>
+				<bind name="pattern" value="'%' + firstname + '%'" />
+				select * from star where firstname like #{pattern} and id = #{id};
+				</script>
+			]]>
+		</sql>
+	</operation>
+
+	<operation id="update">
+		<params>
+			<param>#{firstname,jdbcType=VARCHAR}</param>
+			<param>#{lastname,jdbcType=VARCHAR}</param>
+			<param>#{id,jdbcType=INTEGER}</param>
+		</params>
+		<sql>
+		<![CDATA[
+		<script>
+		  update star
+		    <set>
+		      <if test="firstname!= null">firstname=#{firstname},</if>
+		      <if test="lastname!= null">lastname=#{lastname},</if>
+		    </set>
+		  where id=#{id}
+		</script>
+		]]>
+		</sql>
+	</operation>
+
+	<operation id="update2">
+		<sql>
+		<![CDATA[
+		<script>
+		  update star
+		    <set>
+		      <if test="firstname!= null">firstname=#{firstname},</if>
+		      <if test="lastname!= null">lastname=#{lastname},</if>
+		    </set>
+		  where id=#{id}
+		</script>
+		]]>
+		</sql>
+	</operation>
+</table>

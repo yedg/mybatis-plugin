@@ -1,0 +1,18 @@
+target
+bin
+.DS_Store
+.svn
+
+# Eclipse
+eclipse_config
+.project
+.classpath
+.settings
+*/.settings
+.checkstyle
+reports
+
+# Intelli-J
+*.iml
+*.ipl
+.idea/
