@@ -11,6 +11,7 @@ import java.util.Properties;
  */
 public class DatabaseConfig {
 
+	private String packages;
 	private String id;
 	private String sqlScript;
 	private String jdbcURL;
@@ -27,6 +28,25 @@ public class DatabaseConfig {
 	private String generateOsgiConfig;
 	private String useCache;
 	private Properties properties;
+
+	/**
+	 * Getter method for property <tt>packages</tt>.
+	 * 
+	 * @return property value of packages
+	 */
+	public final String getPackages() {
+		return packages;
+	}
+
+	/**
+	 * Setter method for property <tt>packages</tt>.
+	 * 
+	 * @param packages
+	 *            value to be assigned to property packages
+	 */
+	public final void setPackages(String packages) {
+		this.packages = packages;
+	}
 
 	/**
 	 * @return the id

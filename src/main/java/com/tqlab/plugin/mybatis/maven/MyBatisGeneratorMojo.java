@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Properties;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.PropertyConfigurator;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -48,17 +49,16 @@ public class MyBatisGeneratorMojo extends AbstractMojo {
 	private File outputDirectory;
 
 	/**
-	 * The package for java code generator.
-	 */
-	@Parameter(property = "mybatis.generator.packages", required = true)
-	private String packages;
-
-	/**
 	 * Overwrite the exist code, config file or not.
 	 */
 	@Parameter(property = "mybatis.generator.overwrite", defaultValue = "true")
 	private String overwrite;
 
+	/**
+	 * The package for java code generator.
+	 */
+	@Parameter(property = "mybatis.generator.packages")
+	private String packages;
 	/**
 	 * Location of a SQL script file to run before generating code. If null,
 	 * then no script will be run. If not null, then jdbcDriver, jdbcURL must be
@@ -164,8 +164,7 @@ public class MyBatisGeneratorMojo extends AbstractMojo {
 	private void loadLog4j() {
 		try {
 			Properties props = new Properties();
-			props.load(getClass().getResourceAsStream(
-					"/com/tqlab/plugin/mybatis/log4j.properties"));
+			props.load(getClass().getResourceAsStream("/com/tqlab/plugin/mybatis/log4j.properties"));
 			PropertyConfigurator.configure(props);
 		} catch (IOException e1) {
 			getLog().warn("load log4j.properties error.");
@@ -180,8 +179,7 @@ public class MyBatisGeneratorMojo extends AbstractMojo {
 		getLog().info("context: " + this.getPluginContext());
 		try {
 
-			String dir = outputDirectory.getAbsolutePath().replace(
-					File.separator, "/");
+			String dir = outputDirectory.getAbsolutePath().replace(File.separator, "/");
 			final String java = dir + "/src/main/java/";
 			final String res = dir + "/src/main/resources/";
 
@@ -194,33 +192,40 @@ public class MyBatisGeneratorMojo extends AbstractMojo {
 				f.mkdirs();
 			}
 
-			if (this.isOverwrite()) {
-				File packageFile = new File(new File(java),
-						this.packages.replace('.', '/'));
-				File daoPackageFile = new File(packageFile, "dao");
-				File dataobjectPackageFile = new File(packageFile, "dataobject");
-				try {
-					if (daoPackageFile.exists()) {
-						FileUtils.deleteDirectory(daoPackageFile);
-					}
-					if (dataobjectPackageFile.exists()) {
-						FileUtils.deleteDirectory(dataobjectPackageFile);
-					}
-				} catch (IOException e) {
-					this.getLog().error("Delete file error.", e);
-				}
+			if (isOverwrite() && StringUtils.isNotBlank(this.packages)) {
+				this.overwrite(java, this.packages);
 			}
 
 			MybatisExecutorCallback callback = createMybatisExecutorCallback();
 			for (DatabaseConfig config : buildConfig()) {
-				MybatisExecutor executor = new MybatisExecutor(this.getLog(),
-						this.outputDirectory, this.packages,
+				if (this.isOverwrite() && StringUtils.isNotBlank(config.getPackages())
+						&& !config.getPackages().equals(this.packages)) {
+					this.overwrite(java, config.getPackages());
+				}
+				MybatisExecutor executor = new MybatisExecutor(this.getLog(), this.outputDirectory,
+						StringUtils.isNotEmpty(config.getPackages()) ? config.getPackages() : this.packages,
 						this.isOverwrite(), config);
 				executor.execute(callback);
 			}
 			callback.onFinsh(this.isOverwrite());
 		} catch (IOException e) {
 			throw new MojoExecutionException("", e);
+		}
+	}
+
+	private void overwrite(String java, String packages) {
+		File packageFile = new File(new File(java), packages.replace('.', '/'));
+		File daoPackageFile = new File(packageFile, "dao");
+		File dataobjectPackageFile = new File(packageFile, "dataobject");
+		try {
+			if (daoPackageFile.exists()) {
+				FileUtils.deleteDirectory(daoPackageFile);
+			}
+			if (dataobjectPackageFile.exists()) {
+				FileUtils.deleteDirectory(dataobjectPackageFile);
+			}
+		} catch (IOException e) {
+			this.getLog().error("Delete file error.", e);
 		}
 	}
 
@@ -251,27 +256,22 @@ public class MyBatisGeneratorMojo extends AbstractMojo {
 			public void onFinsh(boolean overwrite) throws IOException {
 
 				if (jdbcConfig.size() > 0) {
-					this.write(outputDirectory.getAbsolutePath()
-							+ File.separator + "src/main/resources/",
-							"jdbc.properties", "jdbc.template", "${jdbc}",
-							getConfigStr(jdbcConfig), true);
+					this.write(outputDirectory.getAbsolutePath() + File.separator + "src/main/resources/",
+							"jdbc.properties", "jdbc.template", "${jdbc}", getConfigStr(jdbcConfig), true);
 				}
 
 				if (springConfig.size() > 0) {
-					this.write(outputDirectory.getAbsolutePath()
-							+ File.separator
-							+ "src/main/resources/META-INF/spring/",
-							"common-db-mapper.xml",
-							"common-db-mapper.template", "${beans}",
-							getConfigStr(springConfig), overwrite);
+					this.write(
+							outputDirectory.getAbsolutePath() + File.separator + "src/main/resources/META-INF/spring/",
+							"common-db-mapper.xml", "common-db-mapper.template", "${beans}", getConfigStr(springConfig),
+							overwrite);
 				}
 
 				if (osgiConfig.size() > 0) {
-					this.write(outputDirectory.getAbsolutePath()
-							+ File.separator
-							+ "src/main/resources/META-INF/spring/",
-							"common-dal-osgi.xml", "common-dal-osgi.template",
-							"${osgi}", getConfigStr(osgiConfig), overwrite);
+					this.write(
+							outputDirectory.getAbsolutePath() + File.separator + "src/main/resources/META-INF/spring/",
+							"common-dal-osgi.xml", "common-dal-osgi.template", "${osgi}", getConfigStr(osgiConfig),
+							overwrite);
 				}
 
 			}
@@ -283,8 +283,7 @@ public class MyBatisGeneratorMojo extends AbstractMojo {
 
 			@Override
 			public String getStringConfigPostfix() {
-				return springConfig.size() == 0 ? "" : "."
-						+ springConfig.size();
+				return springConfig.size() == 0 ? "" : "." + springConfig.size();
 			}
 
 			@Override
@@ -303,14 +302,11 @@ public class MyBatisGeneratorMojo extends AbstractMojo {
 				return str;
 			}
 
-			private void write(String outDir, String fileName,
-					String templateName, String replaceStr,
+			private void write(String outDir, String fileName, String templateName, String replaceStr,
 					String repalceValue, boolean overwrite) throws IOException {
 
-				InputStream is = this.getClass().getResourceAsStream(
-						"/" + templateName);
-				BufferedReader br = new BufferedReader(
-						new InputStreamReader(is));
+				InputStream is = this.getClass().getResourceAsStream("/" + templateName);
+				BufferedReader br = new BufferedReader(new InputStreamReader(is));
 				String line = null;
 				StringBuffer buf = new StringBuffer();
 				while (null != (line = br.readLine())) {
@@ -318,8 +314,7 @@ public class MyBatisGeneratorMojo extends AbstractMojo {
 					buf.append(Constants.LINE_SEPARATOR);
 				}
 
-				String result = buf.toString()
-						.replace(replaceStr, repalceValue);
+				String result = buf.toString().replace(replaceStr, repalceValue);
 				File dir = new File(outDir);
 				if (!dir.exists()) {
 					dir.mkdirs();
@@ -342,13 +337,11 @@ public class MyBatisGeneratorMojo extends AbstractMojo {
 			private void write(String filePath, String str) throws IOException {
 				File file = new File(filePath);
 
-				if (file.getParentFile() != null
-						&& !file.getParentFile().exists()) {
+				if (file.getParentFile() != null && !file.getParentFile().exists()) {
 					file.getParentFile().mkdirs();
 				}
 
-				OutputStreamWriter writer = new OutputStreamWriter(
-						new FileOutputStream(file), "UTF-8");
+				OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(file), "UTF-8");
 				writer.write(str);
 				writer.flush();
 				writer.close();
@@ -395,7 +388,7 @@ public class MyBatisGeneratorMojo extends AbstractMojo {
 		config.setTableNames(tableNames);
 		config.setTablePrefix(tablePrefix);
 		config.setUseCache(useCache);
-
+		config.setPackages(packages);
 		list.add(config);
 		if (null != databaseConfig) {
 			list.addAll(databaseConfig);
