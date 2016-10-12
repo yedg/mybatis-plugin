@@ -39,8 +39,7 @@ public class MySQLDatabase extends AbstractDatabase {
 	 * @param user
 	 * @param password
 	 */
-	public MySQLDatabase(final String database, final String url,
-			final Properties properties) {
+	public MySQLDatabase(final String database, final String url, final Properties properties) {
 		super(DRIVER, database, url, properties);
 	}
 
@@ -49,8 +48,7 @@ public class MySQLDatabase extends AbstractDatabase {
 		return "show tables;";
 	}
 
-	protected String getTableName(final ResultSet resultSet)
-			throws SQLException {
+	protected String getTableName(final ResultSet resultSet) throws SQLException {
 		String name = (String) resultSet.getObject(1);
 		return name;
 	}
@@ -136,5 +134,11 @@ public class MySQLDatabase extends AbstractDatabase {
 			columnName = columnName + "`";
 		}
 		return columnName;
+	}
+
+	@Override
+	protected void buildProperties(Properties p) {
+		super.buildProperties(p);
+		p.put("nullCatalogMeansCurrent", true);
 	}
 }

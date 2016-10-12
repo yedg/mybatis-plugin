@@ -578,7 +578,7 @@ public final class SqlTemplateParserUtil {
 			return FullyQualifiedJavaType.getDateInstance();
 		}
 		case Types.ARRAY: {
-			return new FullyQualifiedJavaType(List.class.getName());
+			return new FullyQualifiedJavaType("java.util.List<?>");
 		}
 		case Types.BINARY:
 		case Types.VARBINARY:

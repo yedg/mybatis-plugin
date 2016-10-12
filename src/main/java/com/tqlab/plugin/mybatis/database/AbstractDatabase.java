@@ -36,8 +36,7 @@ import com.tqlab.plugin.mybatis.MybatisPluginException;
  */
 public abstract class AbstractDatabase implements Database {
 
-	protected static final Logger LOGGER = Logger
-			.getLogger(AbstractDatabase.class);
+	protected static final Logger LOGGER = Logger.getLogger(AbstractDatabase.class);
 
 	private String driverClass;
 	private final transient String database;
@@ -55,8 +54,8 @@ public abstract class AbstractDatabase implements Database {
 	 * @param url
 	 * @param properties
 	 */
-	public AbstractDatabase(final String driverClass, final String database,
-			final String url, final Properties properties) {
+	public AbstractDatabase(final String driverClass, final String database, final String url,
+			final Properties properties) {
 		this.driverClass = driverClass;
 		this.database = database;
 		this.url = url;
@@ -89,11 +88,7 @@ public abstract class AbstractDatabase implements Database {
 			if (null == conn || conn.isClosed()) {
 				Class.forName(driverClass);
 				Properties p = new Properties();
-				for (Entry<Object, Object> e : properties.entrySet()) {
-					if (e.getValue() instanceof String) {
-						p.put(e.getKey(), e.getValue());
-					}
-				}
+				buildProperties(p);
 				conn = DriverManager.getConnection(url, p);
 			}
 
@@ -172,8 +167,7 @@ public abstract class AbstractDatabase implements Database {
 	 * @return
 	 * @throws SQLException
 	 */
-	protected abstract String getTableName(ResultSet resultSet)
-			throws SQLException;
+	protected abstract String getTableName(ResultSet resultSet) throws SQLException;
 
 	@Override
 	public String getDatabase() {
@@ -191,6 +185,19 @@ public abstract class AbstractDatabase implements Database {
 			}
 		} catch (Exception ex) {
 			ex.printStackTrace();
+		}
+	}
+
+	/**
+	 * build jdbc Properties
+	 * 
+	 * @param p
+	 */
+	protected void buildProperties(Properties p) {
+		for (Entry<Object, Object> e : properties.entrySet()) {
+			if (e.getValue() instanceof String) {
+				p.put(e.getKey(), e.getValue());
+			}
 		}
 	}
 

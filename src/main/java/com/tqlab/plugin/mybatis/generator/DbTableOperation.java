@@ -186,4 +186,7 @@ public class DbTableOperation {
 		this.result = result;
 	}
 
+	public String toString() {
+		return "name: " + id;
+	}
 }
