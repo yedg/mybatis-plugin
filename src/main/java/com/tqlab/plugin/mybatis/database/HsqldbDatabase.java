@@ -19,7 +19,7 @@ import java.util.Properties;
  */
 public class HsqldbDatabase extends AbstractDatabase {
 
-	private static final String DRIVER = "org.hsqldb.jdbcDriver";
+	private static final String DRIVER = "org.hsqldb.jdbc.JDBCDriver";
 
 	/**
 	 * 
