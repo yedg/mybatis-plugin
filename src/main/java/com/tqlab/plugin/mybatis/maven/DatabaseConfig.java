@@ -24,7 +24,8 @@ public class DatabaseConfig {
 	private String dbName;
 	private String sqlTemplatePath;
 	private String generateJdbcConfig;
-	private String generateSpringConfig;
+	private String generateSpringBoot;
+    private String generateSpringConfig;
 	private String generateOsgiConfig;
 	private String useCache;
 	private Properties properties;
@@ -287,4 +288,12 @@ public class DatabaseConfig {
 	public final void setProperties(Properties properties) {
 		this.properties = properties;
 	}
+
+    public String getGenerateSpringBoot() {
+        return generateSpringBoot;
+    }
+
+    public void setGenerateSpringBoot(String generateSpringBoot) {
+        this.generateSpringBoot = generateSpringBoot;
+    }
 }

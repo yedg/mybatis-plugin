@@ -178,6 +178,10 @@ public class MybatisExecutor {
 			properties.put(Constants.TABLE_PREFIX, config.getTablePrefix());
 		}
 
+		if(StringUtils.isNotBlank(config.getGenerateSpringBoot())){
+		    properties.put(Constants.SPRINGBOOT,config.getGenerateSpringBoot());
+        }
+
 		if (null != config.getProperties()) {
 			properties.putAll(config.getProperties());
 		}

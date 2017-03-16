@@ -139,6 +139,12 @@ public class MyBatisGeneratorMojo extends AbstractMojo {
 	@Parameter(property = "mybatis.generator.generateSpringConfig", defaultValue = "false")
 	private String generateSpringConfig;
 
+    /**
+     * Generate spring xml config file or not.
+     */
+    @Parameter(property = "mybatis.generator.generateSpringBootConfig", defaultValue = "false")
+    private String generateSpringBoot;
+
 	/**
 	 * Generate spring osgi xml config file or not.
 	 */
@@ -156,6 +162,8 @@ public class MyBatisGeneratorMojo extends AbstractMojo {
 	 */
 	@Parameter
 	private List<DatabaseConfig> databaseConfig;
+
+    private static final String IS_TRUE="true";
 
 	private boolean isOverwrite() {
 		return null == overwrite ? false : Boolean.parseBoolean(overwrite);
@@ -375,9 +383,14 @@ public class MyBatisGeneratorMojo extends AbstractMojo {
 		DatabaseConfig config = new DatabaseConfig();
 		config.setDatabase(database);
 		config.setDbName(dbName);
-		config.setGenerateJdbcConfig(generateJdbcConfig);
 		config.setGenerateOsgiConfig(generateOsgiConfig);
-		config.setGenerateSpringConfig(generateSpringConfig);
+		// spring boot 模式下，零配置文件生成
+		if(generateSpringBoot.equals(IS_TRUE)){
+		    config.setGenerateSpringBoot(IS_TRUE);
+        }else {
+            config.setGenerateJdbcConfig(generateJdbcConfig);
+            config.setGenerateSpringConfig(generateSpringConfig);
+        }
 		config.setJdbcDriver(jdbcDriver);
 		config.setJdbcPassword(jdbcPassword);
 		config.setJdbcURL(jdbcURL);

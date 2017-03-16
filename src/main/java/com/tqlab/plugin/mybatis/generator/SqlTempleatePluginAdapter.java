@@ -114,8 +114,9 @@ public class SqlTempleatePluginAdapter extends PluginAdapter {
 
 	@Override
 	public boolean validate(List<String> warnings) {
-		if (config == null)
-			config = new Config(getProperties());
+		if (config == null) {
+            config = new Config(getProperties());
+        }
 		return true;
 	}
 
@@ -130,6 +131,10 @@ public class SqlTempleatePluginAdapter extends PluginAdapter {
 		if (null == dbTable) {
 			return true;
 		}
+		if(config.isSpringBoot()){
+            interfaze.addAnnotation("@Mapper");
+            interfaze.addImportedType(new FullyQualifiedJavaType("org.apache.ibatis.annotations.Mapper"));
+        }
 
 		final FullyQualifiedJavaType parameterType = introspectedTable.getRules().calculateAllFieldsClass();
 		interfaze.addImportedType(parameterType);
