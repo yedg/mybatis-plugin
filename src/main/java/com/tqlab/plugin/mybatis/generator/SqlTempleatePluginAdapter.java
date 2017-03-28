@@ -30,21 +30,6 @@ import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import net.sf.jsqlparser.expression.Expression;
-import net.sf.jsqlparser.parser.CCJSqlParserUtil;
-import net.sf.jsqlparser.schema.Column;
-import net.sf.jsqlparser.statement.Statement;
-import net.sf.jsqlparser.statement.delete.Delete;
-import net.sf.jsqlparser.statement.insert.Insert;
-import net.sf.jsqlparser.statement.select.AllColumns;
-import net.sf.jsqlparser.statement.select.AllTableColumns;
-import net.sf.jsqlparser.statement.select.PlainSelect;
-import net.sf.jsqlparser.statement.select.Select;
-import net.sf.jsqlparser.statement.select.SelectBody;
-import net.sf.jsqlparser.statement.select.SelectExpressionItem;
-import net.sf.jsqlparser.statement.select.SelectItem;
-import net.sf.jsqlparser.statement.update.Update;
-
 import org.apache.commons.lang.StringUtils;
 import org.dom4j.Element;
 import org.mybatis.generator.api.GeneratedJavaFile;
@@ -67,6 +52,21 @@ import com.tqlab.plugin.mybatis.util.Constants;
 import com.tqlab.plugin.mybatis.util.ScriptUtil;
 import com.tqlab.plugin.mybatis.util.SqlTemplateParserUtil;
 import com.tqlab.plugin.mybatis.util.SqlUtil;
+
+import net.sf.jsqlparser.expression.Expression;
+import net.sf.jsqlparser.parser.CCJSqlParserUtil;
+import net.sf.jsqlparser.schema.Column;
+import net.sf.jsqlparser.statement.Statement;
+import net.sf.jsqlparser.statement.delete.Delete;
+import net.sf.jsqlparser.statement.insert.Insert;
+import net.sf.jsqlparser.statement.select.AllColumns;
+import net.sf.jsqlparser.statement.select.AllTableColumns;
+import net.sf.jsqlparser.statement.select.PlainSelect;
+import net.sf.jsqlparser.statement.select.Select;
+import net.sf.jsqlparser.statement.select.SelectBody;
+import net.sf.jsqlparser.statement.select.SelectExpressionItem;
+import net.sf.jsqlparser.statement.select.SelectItem;
+import net.sf.jsqlparser.statement.update.Update;
 
 /**
  * @author John Lee
@@ -223,10 +223,12 @@ public class SqlTempleatePluginAdapter extends PluginAdapter {
 	private Statement getStatement(final String sql, boolean hasScript) {
 		Statement statement = null;
 		if (!hasScript) {
+			String parseSql = SqlUtil.sql(SqlUtil.filterSql(sql));
 			try {
-				statement = CCJSqlParserUtil.parse(SqlUtil.sql(SqlUtil.filterSql(sql)));
+				statement = CCJSqlParserUtil.parse(parseSql);
 			} catch (Throwable e) {
-				//
+				System.err.print("parse sql error: " + parseSql);
+				// e.printStackTrace();
 			}
 		} else {
 			String tempSql = SqlUtil.filterXml(sql.toLowerCase(Locale.getDefault()), "");
@@ -236,7 +238,7 @@ public class SqlTempleatePluginAdapter extends PluginAdapter {
 			} catch (Throwable e) {
 				//
 				System.err.print("parse sql error: " + tempSql);
-				e.printStackTrace();
+				// e.printStackTrace();
 			}
 		}
 
@@ -250,6 +252,8 @@ public class SqlTempleatePluginAdapter extends PluginAdapter {
 				statement = new Delete();
 			} else if (tempSql.startsWith("insert")) {
 				statement = new Insert();
+			} else {
+				statement = new Select();
 			}
 		}
 		return statement;
