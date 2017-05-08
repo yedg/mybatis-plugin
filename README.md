@@ -102,12 +102,11 @@ Multi-database:
 							<sqlTemplatePath>${project.basedir}/src/main/resources/sqltemplate/</sqlTemplatePath>
 							<generateJdbcConfig>false</generateJdbcConfig>
 							<generateSpringConfig>true</generateSpringConfig>
-							<overwrite>true</overwrite>
+							<useCache>false</useCache>
 						</config>
 					</databaseConfig>
 					
-					
-					<useCache>false</useCache>
+					<overwrite>true</overwrite>
 				</configuration>
 			</plugin>
 		</plugins>

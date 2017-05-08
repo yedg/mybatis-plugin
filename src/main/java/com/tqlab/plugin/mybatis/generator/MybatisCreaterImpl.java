@@ -104,7 +104,7 @@ public class MybatisCreaterImpl implements MybatisCreater {
 		sb.append("<generatorConfiguration>");
 		sb.append(Constants.LINE_SEPARATOR);
 		sb.append(
-				"  <context id=\"" + databaseName + "\" targetRuntime=\"MyBatis3\" defaultModelType=\"hierarchical\">");
+				"  <context id=\"" + databaseName + "\" targetRuntime=\"com.tqlab.plugin.mybatis.generator.ext.MyBatisIntrospectedTableImpl\" defaultModelType=\"hierarchical\">");
 		sb.append(Constants.LINE_SEPARATOR);
 		sb.append(Constants.LINE_SEPARATOR);
 		sb.append("    <plugin type=\"org.mybatis.generator.plugins.SerializablePlugin\" />");
@@ -123,9 +123,11 @@ public class MybatisCreaterImpl implements MybatisCreater {
 		sb.append("    </plugin>");
 		sb.append(Constants.LINE_SEPARATOR);
 		sb.append(Constants.LINE_SEPARATOR);
-		sb.append("    <commentGenerator>");
+		sb.append("    <commentGenerator type=\"com.tqlab.plugin.mybatis.generator.ext.MybatisCommentGenerator\">");
 		sb.append(Constants.LINE_SEPARATOR);
 		sb.append("      <property name=\"suppressDate\" value=\"true\" />");
+		sb.append(Constants.LINE_SEPARATOR);
+		sb.append("      <property name=\"addRemarkComments\" value=\"true\" />");
 		sb.append(Constants.LINE_SEPARATOR);
 		sb.append("    </commentGenerator>");
 		sb.append(Constants.LINE_SEPARATOR);
@@ -176,7 +178,7 @@ public class MybatisCreaterImpl implements MybatisCreater {
 		sb.append("    </sqlMapGenerator>");
 		sb.append(Constants.LINE_SEPARATOR);
 		sb.append(Constants.LINE_SEPARATOR);
-		sb.append("    <javaClientGenerator  type=\"ANNOTATEDMAPPER\" targetPackage=\"" + dalPackage + ".dao\""
+		sb.append("    <javaClientGenerator  type=\"com.tqlab.plugin.mybatis.generator.ext.MybatisAnnotatedClientGenerator\" targetPackage=\"" + dalPackage + ".dao\""
 				+ " targetProject=\"" + java + "\">");
 		sb.append(Constants.LINE_SEPARATOR);
 		sb.append("      <property name=\"enableSubPackages\" value=\"true\" />");
@@ -199,7 +201,7 @@ public class MybatisCreaterImpl implements MybatisCreater {
 		LOGGER.info(Constants.LINE_SEPARATOR + Constants.LINE_SEPARATOR + sb.toString() + Constants.LINE_SEPARATOR
 				+ Constants.LINE_SEPARATOR);
 		LOGGER.info("###################################################################");
-		// 将字符串转换成2进制流
+		// 灏嗗瓧绗︿覆杞崲鎴�2杩涘埗娴�
 		InputStream is = null;
 
 		try {

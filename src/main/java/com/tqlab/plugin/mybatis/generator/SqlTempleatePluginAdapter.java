@@ -131,6 +131,10 @@ public class SqlTempleatePluginAdapter extends PluginAdapter {
 			return true;
 		}
 
+		interfaze.addJavaDocLine("/**");
+		interfaze.addJavaDocLine(" * @author mybatis-generator");
+		interfaze.addJavaDocLine(" */");
+
 		final FullyQualifiedJavaType parameterType = introspectedTable.getRules().calculateAllFieldsClass();
 		interfaze.addImportedType(parameterType);
 
@@ -161,8 +165,6 @@ public class SqlTempleatePluginAdapter extends PluginAdapter {
 					getReturnFullyQualifiedJavaType(operation, interfaze, introspectedTable, parameterType, statement));
 			method.setVisibility(JavaVisibility.PUBLIC);
 			method.setName(operation.getId());
-			final String[] comments = operation.getComment() == null ? null : operation.getComment().split("\n");
-			addGeneralMethodComment(method, introspectedTable, comments);
 			final Set<FullyQualifiedJavaType> importedTypes = new TreeSet<FullyQualifiedJavaType>();
 
 			final List<Parameter> list = this.parseSqlParameter(operation.getParameterType(), sql, hasScript,
@@ -182,6 +184,9 @@ public class SqlTempleatePluginAdapter extends PluginAdapter {
 			} else if (list.size() > 0) {
 				importedTypes.add(new FullyQualifiedJavaType("org.apache.ibatis.annotations.Param")); //$NON-NLS-1$
 			}
+
+			final String[] comments = operation.getComment() == null ? null : operation.getComment().split("\n");
+			addGeneralMethodComment(method, introspectedTable, list, comments);
 
 			for (Parameter p : list) {
 				method.addParameter(p); // $NON-NLS-1$
@@ -484,7 +489,8 @@ public class SqlTempleatePluginAdapter extends PluginAdapter {
 		return list;
 	}
 
-	private void addGeneralMethodComment(Method method, IntrospectedTable introspectedTable, String... comments) {
+	private void addGeneralMethodComment(Method method, IntrospectedTable introspectedTable, List<Parameter> list,
+			String... comments) {
 
 		StringBuilder sb = new StringBuilder();
 
@@ -505,6 +511,11 @@ public class SqlTempleatePluginAdapter extends PluginAdapter {
 		}
 
 		SqlTemplateParserUtil.addJavadocTag(method, false);
+
+		for (Parameter p : list) {
+			method.addJavaDocLine(" * @param " + p.getName() + "");
+		}
+		method.addJavaDocLine(" * @return ");
 
 		method.addJavaDocLine(" */"); //$NON-NLS-1$
 	}

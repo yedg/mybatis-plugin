@@ -34,7 +34,6 @@ import org.mybatis.generator.api.dom.java.Method;
 import org.mybatis.generator.api.dom.java.Parameter;
 import org.mybatis.generator.api.dom.java.TopLevelClass;
 import org.mybatis.generator.config.Context;
-import org.mybatis.generator.config.MergeConstants;
 import org.mybatis.generator.internal.types.JdbcTypeNameTranslator;
 import org.xml.sax.SAXException;
 
@@ -52,8 +51,7 @@ import com.tqlab.plugin.mybatis.generator.DbTableOperation;
  */
 public final class SqlTemplateParserUtil {
 
-	private static final Logger LOGGER = Logger
-			.getLogger(SqlTemplateParserUtil.class);
+	private static final Logger LOGGER = Logger.getLogger(SqlTemplateParserUtil.class);
 
 	private static final String TABLE = "table";
 	private static final String NAME = "name";
@@ -86,17 +84,14 @@ public final class SqlTemplateParserUtil {
 
 	}
 
-	private static void validate(File file) throws SAXException,
-			ParserConfigurationException {
+	private static void validate(File file) throws SAXException, ParserConfigurationException {
 		// 1. Lookup a factory for the W3C XML Schema language
-		SchemaFactory factory = SchemaFactory
-				.newInstance("http://www.w3.org/2001/XMLSchema");
+		SchemaFactory factory = SchemaFactory.newInstance("http://www.w3.org/2001/XMLSchema");
 
 		// 2. Compile the schema.
 		// Here the schema is loaded from a java.io.File, but you could use
 		// a java.net.URL or a javax.xml.transform.Source instead.
-		Schema schema = factory.newSchema(new StreamSource(
-				getSchemaInputStream()));
+		Schema schema = factory.newSchema(new StreamSource(getSchemaInputStream()));
 
 		// 3. Get a validator from the schema.
 		Validator validator = schema.newValidator();
@@ -113,8 +108,7 @@ public final class SqlTemplateParserUtil {
 	}
 
 	private static InputStream getSchemaInputStream() {
-		return SqlTemplateParserUtil.class
-				.getResourceAsStream(MYBATIS_XSD_LOCAL);
+		return SqlTemplateParserUtil.class.getResourceAsStream(MYBATIS_XSD_LOCAL);
 	}
 
 	public static Element parseXml(String xml) {
@@ -160,15 +154,13 @@ public final class SqlTemplateParserUtil {
 		LOGGER.info("parse table :	" + name);
 
 		table.setName(name.toLowerCase());
-		table.setSqlSessionFactory(rootElement
-				.attributeValue(SQL_SESSION_FACTORY));
+		table.setSqlSessionFactory(rootElement.attributeValue(SQL_SESSION_FACTORY));
 		table.setRootElement(rootElement);
 		return table;
 	}
 
 	@SuppressWarnings("unchecked")
-	public static DbTable parseDbTable(Context context, File file,
-			Map<String, GeneratedJavaFile> maps) {
+	public static DbTable parseDbTable(Context context, File file, Map<String, GeneratedJavaFile> maps) {
 
 		LOGGER.info("start parse file :	" + file);
 
@@ -179,8 +171,7 @@ public final class SqlTemplateParserUtil {
 		LOGGER.info("parse table :	" + name);
 
 		table.setName(name.toLowerCase());
-		table.setSqlSessionFactory(rootElement
-				.attributeValue(SQL_SESSION_FACTORY));
+		table.setSqlSessionFactory(rootElement.attributeValue(SQL_SESSION_FACTORY));
 		List<Element> list = rootElement.elements();
 		for (Element e : list) {
 			if (COLUMN.equalsIgnoreCase(e.getName())) {
@@ -194,12 +185,10 @@ public final class SqlTemplateParserUtil {
 				column.setJavaProperty(javaProperty);
 				table.getColumns().add(column);
 			} else if (RESULT.equalsIgnoreCase(e.getName())) {
-				DbSelectResult dbSelectResult = parseDbSelectResult(e, null,
-						context, maps);
+				DbSelectResult dbSelectResult = parseDbSelectResult(e, null, context, maps);
 				table.getSelectResults().add(dbSelectResult);
 			} else if (OPERATION.equalsIgnoreCase(e.getName())) {
-				DbTableOperation operation = parseDbTableOperation(e, context,
-						table.getSelectResults(), maps);
+				DbTableOperation operation = parseDbTableOperation(e, context, table.getSelectResults(), maps);
 				if (null == operation) {
 					continue;
 				}
@@ -225,8 +214,7 @@ public final class SqlTemplateParserUtil {
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	private static DbTableOperation parseDbTableOperation(Element e,
-			Context context, List<DbSelectResult> results,
+	private static DbTableOperation parseDbTableOperation(Element e, Context context, List<DbSelectResult> results,
 			Map<String, GeneratedJavaFile> maps) {
 		String id = e.attributeValue(ID);
 		String many = e.attributeValue(MANY);
@@ -255,12 +243,10 @@ public final class SqlTemplateParserUtil {
 		}
 
 		if (null != result) {
-			DbSelectResult dbSelectResult = parseDbSelectResult(result,
-					resultType, context, maps);
+			DbSelectResult dbSelectResult = parseDbSelectResult(result, resultType, context, maps);
 			operation.setResult(dbSelectResult);
 		} else if (null != resultType) {
-			FullyQualifiedJavaType fullyQualifiedJavaType = getFullyQualifiedJavaType(
-					context, resultType);
+			FullyQualifiedJavaType fullyQualifiedJavaType = getFullyQualifiedJavaType(context, resultType);
 			for (DbSelectResult dbSelectResult : results) {
 				if (dbSelectResult.getType().equals(fullyQualifiedJavaType)) {
 					operation.setResult(dbSelectResult);
@@ -335,31 +321,30 @@ public final class SqlTemplateParserUtil {
 	 * @return
 	 */
 	@SuppressWarnings("unchecked")
-	private static DbSelectResult parseDbSelectResult(Element result,
-			String resultType, Context context,
+	private static DbSelectResult parseDbSelectResult(Element result, String resultType, Context context,
 			Map<String, GeneratedJavaFile> maps) {
 		String objectName = result.attributeValue(OBJECT_NAME);
 		DbSelectResult dbSelectResult = new DbSelectResult();
 		dbSelectResult.setObjectName(objectName);
-		String basicPackage = context.getJavaModelGeneratorConfiguration()
-				.getTargetPackage();
+		String basicPackage = context.getJavaModelGeneratorConfiguration().getTargetPackage();
 		if (null != objectName) {
-			FullyQualifiedJavaType objectType = new FullyQualifiedJavaType(
-					basicPackage + "." + objectName);
+			FullyQualifiedJavaType objectType = new FullyQualifiedJavaType(basicPackage + "." + objectName);
 
 			dbSelectResult.setType(objectType);
 
 			TopLevelClass topLevelClass = new TopLevelClass(objectType);
+			topLevelClass.addJavaDocLine("/**");
+			topLevelClass.addJavaDocLine(" * @author mybatis-generator");
+			topLevelClass.addJavaDocLine(" */");
 
-			FullyQualifiedJavaType serializable = new FullyQualifiedJavaType(
-					Serializable.class.getName());
+			FullyQualifiedJavaType serializable = new FullyQualifiedJavaType(Serializable.class.getName());
 			topLevelClass.addImportedType(serializable);
 			topLevelClass.addSuperInterface(serializable);
 
 			Field field = new Field();
 			field.setFinal(true);
 			field.setInitializationString("1L"); //$NON-NLS-1$
-			field.setName(SERIAL_VERSION_UID); //$NON-NLS-1$
+			field.setName(SERIAL_VERSION_UID); // $NON-NLS-1$
 			field.setStatic(true);
 			field.setType(new FullyQualifiedJavaType("long")); //$NON-NLS-1$
 			field.setVisibility(JavaVisibility.PRIVATE);
@@ -367,9 +352,8 @@ public final class SqlTemplateParserUtil {
 
 			DefaultJavaFormatter formatter = new DefaultJavaFormatter();
 			formatter.setContext(context);
-			GeneratedJavaFile generatedJavaFile = new GeneratedJavaFile(
-					topLevelClass, context.getJavaModelGeneratorConfiguration()
-							.getTargetProject(), formatter);
+			GeneratedJavaFile generatedJavaFile = new GeneratedJavaFile(topLevelClass,
+					context.getJavaModelGeneratorConfiguration().getTargetProject(), formatter);
 			topLevelClass.setVisibility(JavaVisibility.PUBLIC);
 
 			List<Element> properties = result.elements(PROPERTY);
@@ -380,15 +364,13 @@ public final class SqlTemplateParserUtil {
 				String column = el.attributeValue(COLUMN);
 				String jdbcType = el.attributeValue(JDBC_TYPE);
 				processProperty(topLevelClass, column, javaProperty, javaType);
-				dbSelectResult.addDbColumn(column, javaProperty, javaType,
-						jdbcType);
+				dbSelectResult.addDbColumn(column, javaProperty, javaType, jdbcType);
 			}
 			maps.put(objectType.getFullyQualifiedName(), generatedJavaFile);
 		}
 		// //////
 		else if (null != resultType && !isBasicType(resultType)) {
-			FullyQualifiedJavaType fullyQualifiedJavaType = getFullyQualifiedJavaType(
-					context, resultType);
+			FullyQualifiedJavaType fullyQualifiedJavaType = getFullyQualifiedJavaType(context, resultType);
 
 			List<Element> properties = result.elements(PROPERTY);
 			for (Element el : properties) {
@@ -396,22 +378,18 @@ public final class SqlTemplateParserUtil {
 				String javaProperty = el.attributeValue(JAVA_PROPERTY);
 				String column = el.attributeValue(COLUMN);
 				String jdbcType = el.attributeValue(JDBC_TYPE);
-				dbSelectResult.addDbColumn(column, javaProperty, javaType,
-						jdbcType);
+				dbSelectResult.addDbColumn(column, javaProperty, javaType, jdbcType);
 			}
 			dbSelectResult.setType(fullyQualifiedJavaType);
 		}
 		return dbSelectResult;
 	}
 
-	private static FullyQualifiedJavaType getFullyQualifiedJavaType(
-			final Context context, final String resultType) {
+	private static FullyQualifiedJavaType getFullyQualifiedJavaType(final Context context, final String resultType) {
 		if (!isBasicType(resultType)) {
-			String basicPackage = context.getJavaModelGeneratorConfiguration()
-					.getTargetPackage();
+			String basicPackage = context.getJavaModelGeneratorConfiguration().getTargetPackage();
 			String type = resultType;
-			if (null != basicPackage && !"".equals(basicPackage)
-					&& !resultType.startsWith(basicPackage)
+			if (null != basicPackage && !"".equals(basicPackage) && !resultType.startsWith(basicPackage)
 					&& resultType.indexOf('.') == -1) {
 				type = basicPackage + "." + resultType;
 			}
@@ -422,37 +400,23 @@ public final class SqlTemplateParserUtil {
 	}
 
 	public static boolean isBasicType(String resultType) {
-		return "java.lang.Integer".equals(resultType)
-				|| "Integer".equalsIgnoreCase(resultType)
-				|| "int".equalsIgnoreCase(resultType)
-				|| "java.lang.Short".equals(resultType)
-				|| "Short".equalsIgnoreCase(resultType)
-				|| "short".equalsIgnoreCase(resultType)
-				|| "java.lang.Char".equals(resultType)
-				|| "Char".equalsIgnoreCase(resultType)
-				|| "char".equalsIgnoreCase(resultType)
-				|| "java.lang.Byte".equals(resultType)
-				|| "Byte".equalsIgnoreCase(resultType)
-				|| "byte".equalsIgnoreCase(resultType)
-				|| "java.lang.Long".equals(resultType)
-				|| "Long".equalsIgnoreCase(resultType)
-				|| "long".equalsIgnoreCase(resultType)
-				|| "java.lang.Float".equals(resultType)
-				|| "Float".equalsIgnoreCase(resultType)
-				|| "float".equalsIgnoreCase(resultType)
-				|| "java.lang.Double".equals(resultType)
-				|| "Double".equalsIgnoreCase(resultType)
-				|| "double".equalsIgnoreCase(resultType)
-				|| "java.lang.Boolean".equals(resultType)
-				|| "Boolean".equalsIgnoreCase(resultType)
-				|| "boolean".equalsIgnoreCase(resultType)
-				|| "java.lang.String".equals(resultType)
-				|| "String".equalsIgnoreCase(resultType);
+		return "java.lang.Integer".equals(resultType) || "Integer".equalsIgnoreCase(resultType)
+				|| "int".equalsIgnoreCase(resultType) || "java.lang.Short".equals(resultType)
+				|| "Short".equalsIgnoreCase(resultType) || "short".equalsIgnoreCase(resultType)
+				|| "java.lang.Char".equals(resultType) || "Char".equalsIgnoreCase(resultType)
+				|| "char".equalsIgnoreCase(resultType) || "java.lang.Byte".equals(resultType)
+				|| "Byte".equalsIgnoreCase(resultType) || "byte".equalsIgnoreCase(resultType)
+				|| "java.lang.Long".equals(resultType) || "Long".equalsIgnoreCase(resultType)
+				|| "long".equalsIgnoreCase(resultType) || "java.lang.Float".equals(resultType)
+				|| "Float".equalsIgnoreCase(resultType) || "float".equalsIgnoreCase(resultType)
+				|| "java.lang.Double".equals(resultType) || "Double".equalsIgnoreCase(resultType)
+				|| "double".equalsIgnoreCase(resultType) || "java.lang.Boolean".equals(resultType)
+				|| "Boolean".equalsIgnoreCase(resultType) || "boolean".equalsIgnoreCase(resultType)
+				|| "java.lang.String".equals(resultType) || "String".equalsIgnoreCase(resultType);
 	}
 
-	private static void processProperty(final TopLevelClass topLevelClass,
-			final String cloumn, final String javaProperty,
-			final String javaType) {
+	private static void processProperty(final TopLevelClass topLevelClass, final String cloumn,
+			final String javaProperty, final String javaType) {
 
 		final FullyQualifiedJavaType type = new FullyQualifiedJavaType(javaType);
 
@@ -466,9 +430,8 @@ public final class SqlTemplateParserUtil {
 		topLevelClass.addImportedType(javaType);
 
 		Method method = new Method();
-		String methodName = javaProperty.length() > 1 ? javaProperty.substring(
-				0, 1).toUpperCase()
-				+ javaProperty.substring(1) : javaProperty.toUpperCase();
+		String methodName = javaProperty.length() > 1
+				? javaProperty.substring(0, 1).toUpperCase() + javaProperty.substring(1) : javaProperty.toUpperCase();
 		method.setName("set" + methodName);
 		method.addParameter(new Parameter(type, javaProperty));
 		method.addBodyLine("this." + javaProperty + "=" + javaProperty + ";");
@@ -514,20 +477,20 @@ public final class SqlTemplateParserUtil {
 		method.addJavaDocLine(sb.toString());
 
 		addJavadocTag(method, false);
+		
+		for (Parameter p : method.getParameters()) {
+			method.addJavaDocLine(" * @param " + p.getName());
+		}
+
+		if (null != method.getReturnType()) {
+			method.addJavaDocLine(" * @return " + method.getReturnType());
+		}
 
 		method.addJavaDocLine(" */"); //$NON-NLS-1$
 	}
 
-	public static void addJavadocTag(JavaElement javaElement,
-			boolean markAsDoNotDelete) {
-		javaElement.addJavaDocLine(" *"); //$NON-NLS-1$
-		StringBuilder sb = new StringBuilder();
-		sb.append(" * ");
-		sb.append(MergeConstants.NEW_ELEMENT_TAG);
-		if (markAsDoNotDelete) {
-			sb.append(" do_not_delete_during_merge"); //$NON-NLS-1$
-		}
-		javaElement.addJavaDocLine(sb.toString());
+	public static void addJavadocTag(JavaElement javaElement, boolean markAsDoNotDelete) {
+
 	}
 
 	/**
@@ -535,8 +498,7 @@ public final class SqlTemplateParserUtil {
 	 * @param jdbcTypeName
 	 * @return
 	 */
-	public static FullyQualifiedJavaType getFullyQualifiedJavaType(
-			final String jdbcTypeName) {
+	public static FullyQualifiedJavaType getFullyQualifiedJavaType(final String jdbcTypeName) {
 		String jdbcType = jdbcTypeName;
 		if (null == jdbcType || jdbcType.trim().equals("")) {
 			jdbcType = "JAVA_OBJECT";
@@ -593,8 +555,7 @@ public final class SqlTemplateParserUtil {
 	}
 
 	public static String parseJdbcTypeName(final String str) {
-		final String jdbcTypeName = str.replace("jdbcType", "")
-				.replace("=", "").trim();
+		final String jdbcTypeName = str.replace("jdbcType", "").replace("=", "").trim();
 		return jdbcTypeName;
 	}
 }
