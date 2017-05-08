@@ -2,6 +2,8 @@ package com.tqlab.plugin.mybatis.generator.ext;
 
 import org.mybatis.generator.codegen.mybatis3.IntrospectedTableMyBatis3Impl;
 
+import com.tqlab.plugin.mybatis.generator.TableHolder;
+
 /**
  * 
  * @author lijun
@@ -38,5 +40,17 @@ public class MyBatisIntrospectedTableImpl extends IntrospectedTableMyBatis3Impl 
 		sb.append(fullyQualifiedTable.getDomainObjectName());
 		sb.append("Example"); //$NON-NLS-1$
 		setExampleType(sb.toString());
+	}
+
+	public String getFullyQualifiedTableNameAtRuntime() {
+		String tableNameAtRuntime = super.getFullyQualifiedTableNameAtRuntime();
+		if (null != TableHolder.getTableAlias(tableNameAtRuntime)) {
+			tableNameAtRuntime = TableHolder.getTableAlias(tableNameAtRuntime);
+		}
+		return tableNameAtRuntime;
+	}
+
+	public String getAliasedFullyQualifiedTableNameAtRuntime() {
+		return getFullyQualifiedTableNameAtRuntime();
 	}
 }

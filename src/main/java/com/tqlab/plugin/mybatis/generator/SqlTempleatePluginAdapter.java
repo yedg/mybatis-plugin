@@ -125,15 +125,11 @@ public class SqlTempleatePluginAdapter extends PluginAdapter {
 		// Check use cache or not
 		this.checkCache(interfaze);
 
-		final String tableName = introspectedTable.getAliasedFullyQualifiedTableNameAtRuntime();
+		final String tableName = introspectedTable.getFullyQualifiedTableNameAtRuntime();
 		DbTable dbTable = this.map.get(tableName.toLowerCase());
 		if (null == dbTable) {
 			return true;
 		}
-
-		interfaze.addJavaDocLine("/**");
-		interfaze.addJavaDocLine(" * @author mybatis-generator");
-		interfaze.addJavaDocLine(" */");
 
 		final FullyQualifiedJavaType parameterType = introspectedTable.getRules().calculateAllFieldsClass();
 		interfaze.addImportedType(parameterType);
@@ -560,7 +556,7 @@ public class SqlTempleatePluginAdapter extends PluginAdapter {
 	private FullyQualifiedJavaType getJavaType(TopLevelClass topLevelClass, IntrospectedColumn introspectedColumn,
 			IntrospectedTable introspectedTable) {
 
-		String tableName = introspectedTable.getAliasedFullyQualifiedTableNameAtRuntime();
+		String tableName = introspectedTable.getFullyQualifiedTableNameAtRuntime();
 
 		DbTable dbTable = this.map.get(tableName.toLowerCase());
 		if (null == dbTable) {
