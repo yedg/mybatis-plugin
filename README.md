@@ -1,6 +1,6 @@
 Mybatis Generator Plugin
 ==============
-##1. Maven repository
+## 1. Maven repository
 
 ```
 <dependency>
@@ -10,12 +10,9 @@ Mybatis Generator Plugin
 </dependency>
 ```
 
-##2. Plugin Activity Diagram
+## 2. Plugin Configuration Sample
 
-![Mybatis Generator Plugin Activity Diagram](http://img.tqlab.com/mybatis-plugin/mybatis-gernrator-plugin-activity-diagram.png)
-
-
-##3. Plugin Configuration Sample
+Single database:
 
 ```
 	<build>
@@ -55,6 +52,68 @@ Mybatis Generator Plugin
 	</build>
 ```
 
+Multi-database:
+
+```
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>com.tqlab.plugin</groupId>
+				<artifactId>tqlab-mybatis-plugin</artifactId>
+				<version>1.0.6</version>
+				<executions>
+					<execution>
+						<id>Generate MyBatis Artifacts</id>
+						<phase>deploy</phase>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<outputDirectory>${project.basedir}</outputDirectory>
+					
+					<databaseConfig>
+						<config>
+							<!-- db config -->
+							<jdbcURL>jdbc:mysql://localhost/testdb1?useUnicode=true&amp;characterEncoding=UTF-8&amp;zeroDateTimeBehavior=convertToNull</jdbcURL>
+							<jdbcUserId>user</jdbcUserId>
+							<jdbcPassword>password</jdbcPassword>
+							<database>testdb1</database>
+							<dbName>mysql</dbName>
+							<!-- db config end -->
+							<!-- <sqlScript>${project.basedir}/src/main/resources/mysql.sql</sqlScript> -->
+							<packages>com.taobao.bns.dal</packages>
+							<sqlTemplatePath>${project.basedir}/src/main/resources/sqltemplate/</sqlTemplatePath>
+							<generateJdbcConfig>false</generateJdbcConfig>
+							<generateSpringConfig>true</generateSpringConfig>
+							<overwrite>true</overwrite>
+						</config>
+						<config>
+							<!-- db config -->
+							<jdbcURL>jdbc:mysql://localhost/testdb2?useUnicode=true&amp;characterEncoding=UTF-8&amp;zeroDateTimeBehavior=convertToNull</jdbcURL>
+							<jdbcUserId>user</jdbcUserId>
+							<jdbcPassword>password</jdbcPassword>
+							<database>testdb2</database>
+							<dbName>mysql</dbName>
+							<!-- db config end -->
+							<!-- <sqlScript>${project.basedir}/src/main/resources/mysql.sql</sqlScript> -->
+							<packages>com.taobao.bns.dal</packages>
+							<sqlTemplatePath>${project.basedir}/src/main/resources/sqltemplate/</sqlTemplatePath>
+							<generateJdbcConfig>false</generateJdbcConfig>
+							<generateSpringConfig>true</generateSpringConfig>
+							<overwrite>true</overwrite>
+						</config>
+					</databaseConfig>
+					
+					
+					<useCache>false</useCache>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+```
+
 
 Attribute		|	Description		|	Default value    | Required
 ----------------|------------------|--------------------|------------
@@ -77,7 +136,7 @@ properties|extra config||false
 
 
 
-##4. Sql Template File Sample
+## 3. Sql Template File Sample
 
 
 <pre>
@@ -179,22 +238,22 @@ properties|extra config||false
 
 More sample: [https://github.com/tqlab/mybatis-plugin/blob/master/demo/src/main/resources/sqltemplate/hsqldb/table.star.xml](https://github.com/tqlab/mybatis-plugin/blob/master/demo/src/main/resources/sqltemplate/hsqldb/table.star.xml)
 
-##5. Change log
-###v 1.0.2
+## 4. Change log
+### v 1.0.2
 1. bugfix hsqldb sql
 2. Add mysql support
 3. Add extra config (tableNames)
 
-###v 1.0.3
+### v 1.0.3
 
 1. modify Java Code generate commment
 2. config commentGenerator property suppressDate false
 3. change @paramter expression to maven annotation
 
-###v1.0.4
+### v1.0.4
 1. bugfix 1.0.3. The v1.0.3 has a serious bug when release to maven centeral.
  
-###v1.0.5
+### v1.0.5
 1. Add mybatis sql template xml Scheam support.
 2. Add log4j support when generate Java Mapper.
 3. Add tableNames validate.
@@ -203,13 +262,13 @@ More sample: [https://github.com/tqlab/mybatis-plugin/blob/master/demo/src/main/
 6. Add auto delete ..*.dao /..*.dataobject package files when set overwrite is ture.
 7. Delete unused code.
 
-###v1.0.6
+### v1.0.6
 1. bugfix mysql table generate code error when name is uppercase.
 2. bugfix table generate code error when the column's type is BLOB,BINARY or VARBINARY.
 3. Add dynamic script for annotation supported.
 4. Add parameter of Object type supported.
 
-###v1.0.7
+### v1.0.7
 1. update jsqlparser version to 0.8.9
 2. Add mybatis Options annotation supported.
 3. Add alias name config supported.
