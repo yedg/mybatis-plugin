@@ -238,15 +238,16 @@ public class MybatisCreaterImpl implements MybatisCreater {
 
 			List<MybatisBean> myList = new ArrayList<MybatisBean>();
 			for (String s0 : tables) {
-				String s = getTableName(s0);
+				String alias = TableHolder.getTableAlias(s0);
+				String s = getTableName(alias);
 				String temp = getObjectName(s);
 				String beanId = temp.substring(0, 1).toLowerCase() + temp.substring(1) + "Mapper";
 				MybatisBean mybatisBean = new MybatisBean();
 				mybatisBean.setBeanId(beanId);
 				mybatisBean.setBeanName(beanId);
-				DbTable dbTable = dbTables.get(s0);
+				DbTable dbTable = dbTables.get(alias);
 				if (null == dbTable) {
-					dbTable = dbTables.get(s0);
+					dbTable = dbTables.get(alias);
 				}
 				mybatisBean.setSqlSessionFactory(null == dbTable ? null : dbTable.getSqlSessionFactory());
 				mybatisBean.setClassPath(dalPackage + ".dao." + temp + "Mapper");
@@ -330,9 +331,7 @@ public class MybatisCreaterImpl implements MybatisCreater {
 				temp = temp.substring(1);
 			}
 
-			tableName = TableHolder.getTableAlias(temp);
-		} else {
-			tableName = TableHolder.getTableAlias(tableName);
+			tableName = temp;
 		}
 
 		int index = tableName.indexOf(" ");
