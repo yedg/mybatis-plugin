@@ -29,8 +29,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -46,6 +44,7 @@ import com.tqlab.plugin.mybatis.database.Database;
 import com.tqlab.plugin.mybatis.database.DatabaseEnum;
 import com.tqlab.plugin.mybatis.generator.config.Config;
 import com.tqlab.plugin.mybatis.util.Constants;
+import com.tqlab.plugin.mybatis.util.TableUtil;
 
 /**
  * @author John Lee
@@ -62,9 +61,10 @@ public class MybatisCreaterImpl implements MybatisCreater {
 		this.properties = properties;
 	}
 
-	public List<MybatisBean> create(final Database database, final String jdbcUrl, final String databaseName,
-			final String userName, final String password, final String dalPackage, final String outputDir,
-			final boolean overwrite, final Map<String, DbTable> dbTables, final String... tableNames) {
+	public List<MybatisBean> create(final Database database, final String jdbcUrl, final String doSuffix,
+			final String doRootClass, final String databaseName, final String userName, final String password,
+			final String dalPackage, final String outputDir, final boolean overwrite,
+			final Map<String, DbTable> dbTables, final String... tableNames) {
 
 		List<String> tableList = new ArrayList<String>();
 		for (String s : tableNames) {
@@ -122,6 +122,12 @@ public class MybatisCreaterImpl implements MybatisCreater {
 				+ "\" targetRuntime=\"com.tqlab.plugin.mybatis.generator.ext.MyBatisIntrospectedTableImpl\" defaultModelType=\"hierarchical\">");
 		sb.append(Constants.LINE_SEPARATOR);
 		sb.append(Constants.LINE_SEPARATOR);
+
+		if (StringUtils.isNotBlank(doSuffix)) {
+			sb.append("    <property name=\"doSuffix\" value=\"" + doSuffix + "\" />");
+			sb.append(Constants.LINE_SEPARATOR);
+		}
+
 		sb.append("    <plugin type=\"org.mybatis.generator.plugins.SerializablePlugin\" />");
 		sb.append(Constants.LINE_SEPARATOR);
 		sb.append(Constants.LINE_SEPARATOR);
@@ -178,6 +184,12 @@ public class MybatisCreaterImpl implements MybatisCreater {
 		sb.append(Constants.LINE_SEPARATOR);
 		sb.append("    <javaModelGenerator targetPackage=\"" + dalPackage + ".dataobject" + "\" targetProject=\"" + java
 				+ "\">");
+
+		if (StringUtils.isNotBlank(doRootClass)) {
+			sb.append(Constants.LINE_SEPARATOR);
+			sb.append("      <property name=\"rootClass\" value=\"" + doRootClass + "\" />");
+			sb.append(Constants.LINE_SEPARATOR);
+		}
 		sb.append(Constants.LINE_SEPARATOR);
 		sb.append("      <property name=\"enableSubPackages\" value=\"true\" />");
 		sb.append(Constants.LINE_SEPARATOR);
@@ -239,8 +251,8 @@ public class MybatisCreaterImpl implements MybatisCreater {
 			List<MybatisBean> myList = new ArrayList<MybatisBean>();
 			for (String s0 : tables) {
 				String alias = TableHolder.getTableAlias(s0);
-				String s = getTableName(alias);
-				String temp = getObjectName(s);
+				String s = TableUtil.getTableName(alias);
+				String temp = TableUtil.getObjectName(s, this.config.getTablePrefix());
 				String beanId = temp.substring(0, 1).toLowerCase() + temp.substring(1) + "Mapper";
 				MybatisBean mybatisBean = new MybatisBean();
 				mybatisBean.setBeanId(beanId);
@@ -290,8 +302,22 @@ public class MybatisCreaterImpl implements MybatisCreater {
 		buf.append(tableName);
 		buf.append("\" ");
 		buf.append("domainObjectName=\"");
-		buf.append(getObjectName(TableHolder.getTableAlias(tableName)));
+		String objectName = TableUtil.getObjectName(TableHolder.getTableAlias(tableName), this.config.getTablePrefix());
+
+		buf.append(objectName);
 		buf.append("\" ");
+		buf.append(" ");
+		buf.append("mapperName=\"");
+		buf.append(objectName);
+		buf.append("Mapper");
+		buf.append("\" ");
+
+		buf.append(" ");
+		buf.append("sqlProviderName=\"");
+		buf.append(objectName);
+		buf.append("SqlProvider");
+		buf.append("\" ");
+
 		buf.append("enableSelectByPrimaryKey=\"true\" ");
 		buf.append("enableUpdateByPrimaryKey=\"true\" ");
 		buf.append("enableDeleteByPrimaryKey=\"true\" ");
@@ -319,59 +345,4 @@ public class MybatisCreaterImpl implements MybatisCreater {
 		return buf.toString();
 	}
 
-	private String getObjectName(String tableName) {
-		if (null == tableName || "".equals(tableName.trim())) {
-			return null;
-		}
-
-		String prefix = config.getTablePrefix();
-		if (StringUtils.isNotBlank(prefix) && tableName.toLowerCase().startsWith(prefix)) {
-			String temp = tableName.substring(prefix.length()).trim();
-			if (temp.startsWith("_")) {
-				temp = temp.substring(1);
-			}
-
-			tableName = temp;
-		}
-
-		int index = tableName.indexOf(" ");
-		while (index != -1) {
-			if (index + 1 >= tableName.length() || index + 2 >= tableName.length()) {
-				tableName = tableName.replace(" ", "");
-				break;
-			}
-			String s1 = tableName.substring(index + 1, index + 2);
-			String s2 = s1.toUpperCase();
-			tableName = tableName.replace(" " + s1, "" + s2);
-			index = tableName.indexOf(" ");
-		}
-		//
-		index = tableName.indexOf("_");
-		while (index != -1) {
-			if (index + 1 >= tableName.length() || index + 2 >= tableName.length()) {
-				tableName = tableName.replace("_", "");
-				break;
-			}
-			String s1 = tableName.substring(index + 1, index + 2);
-			String s2 = s1.toUpperCase();
-			tableName = tableName.replace("_" + s1, "" + s2);
-			index = tableName.indexOf("_");
-		}
-		if (tableName.length() == 0) {
-			return null;
-		}
-		String s = tableName.substring(0, 1).toUpperCase() + tableName.substring(1, tableName.length());
-		return s;
-	}
-
-	private String getTableName(final String tableName) {
-		String name = tableName.trim();
-
-		final Pattern pattern = Pattern.compile("^[^a-zA-Z0-9](.)+[^a-zA-Z0-9]$");
-		final Matcher matcher = pattern.matcher(name);
-		if (matcher.find()) {
-			name = name.substring(1, name.length() - 1);
-		}
-		return name;
-	}
 }

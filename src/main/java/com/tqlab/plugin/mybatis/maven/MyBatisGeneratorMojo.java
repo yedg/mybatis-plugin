@@ -98,10 +98,22 @@ public class MyBatisGeneratorMojo extends AbstractMojo {
 	private String tableNames;
 
 	/**
-	 * The table name's prefix. For example, db_xxxxxx.
+	 * The table name's prefix. For example, xxx_Name.
 	 */
 	@Parameter(property = "mybatis.generator.tablePrefix")
 	private String tablePrefix;
+
+	/**
+	 * The object name suffix. For example, xxxDO.
+	 */
+	@Parameter(property = "mybatis.generator.doSuffix")
+	private String doSuffix;
+
+	/**
+	 * The object super class.
+	 */
+	@Parameter(property = "mybatis.generator.doRootClass")
+	private String doRootClass;
 
 	/**
 	 * The application database name
@@ -387,6 +399,8 @@ public class MyBatisGeneratorMojo extends AbstractMojo {
 		config.setSqlTemplatePath(sqlTemplatePath);
 		config.setTableNames(tableNames);
 		config.setTablePrefix(tablePrefix);
+		config.setDoSuffix(doSuffix);
+		config.setDoRootClass(doRootClass);
 		config.setUseCache(useCache);
 		config.setPackages(packages);
 		list.add(config);

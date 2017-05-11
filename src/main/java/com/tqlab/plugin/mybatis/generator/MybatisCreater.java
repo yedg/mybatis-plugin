@@ -31,6 +31,8 @@ public interface MybatisCreater {
 	 * 
 	 * @param database
 	 * @param url
+	 * @param doSuffix
+	 * @param doRootClass
 	 * @param databaseName
 	 * @param userName
 	 * @param password
@@ -43,8 +45,7 @@ public interface MybatisCreater {
 	 *            is null, all tables in the database will be used.
 	 * @return
 	 */
-	List<MybatisBean> create(Database database, String url,
-			String databaseName, String userName, String password,
-			String dalPackage, String dir, boolean overwrite,
+	List<MybatisBean> create(Database database, String url, String objectSuffix, String doRootClass,
+			String databaseName, String userName, String password, String dalPackage, String dir, boolean overwrite,
 			final Map<String, DbTable> dbTables, String... tables);
 }

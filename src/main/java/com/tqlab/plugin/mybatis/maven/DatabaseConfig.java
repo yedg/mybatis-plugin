@@ -20,6 +20,8 @@ public class DatabaseConfig {
 	private String jdbcDriver;
 	private String tableNames;
 	private String tablePrefix;
+	private String doSuffix;
+	private String doRootClass;
 	private String database;
 	private String dbName;
 	private String sqlTemplatePath;
@@ -30,22 +32,10 @@ public class DatabaseConfig {
 	private Properties properties;
 
 	/**
-	 * Getter method for property <tt>packages</tt>.
-	 * 
-	 * @return property value of packages
+	 * @return the packages
 	 */
 	public final String getPackages() {
 		return packages;
-	}
-
-	/**
-	 * Setter method for property <tt>packages</tt>.
-	 * 
-	 * @param packages
-	 *            value to be assigned to property packages
-	 */
-	public final void setPackages(String packages) {
-		this.packages = packages;
 	}
 
 	/**
@@ -105,6 +95,20 @@ public class DatabaseConfig {
 	}
 
 	/**
+	 * @return the doSuffix
+	 */
+	public final String getDoSuffix() {
+		return doSuffix;
+	}
+
+	/**
+	 * @return the doRootClass
+	 */
+	public final String getDoRootClass() {
+		return doRootClass;
+	}
+
+	/**
 	 * @return the database
 	 */
 	public final String getDatabase() {
@@ -147,10 +151,25 @@ public class DatabaseConfig {
 	}
 
 	/**
+	 * @return the useCache
+	 */
+	public final String getUseCache() {
+		return useCache;
+	}
+
+	/**
 	 * @return the properties
 	 */
 	public final Properties getProperties() {
 		return properties;
+	}
+
+	/**
+	 * @param packages
+	 *            the packages to set
+	 */
+	public final void setPackages(String packages) {
+		this.packages = packages;
 	}
 
 	/**
@@ -218,6 +237,22 @@ public class DatabaseConfig {
 	}
 
 	/**
+	 * @param doSuffix
+	 *            the doSuffix to set
+	 */
+	public final void setDoSuffix(String doSuffix) {
+		this.doSuffix = doSuffix;
+	}
+
+	/**
+	 * @param doRootClass
+	 *            the doRootClass to set
+	 */
+	public final void setDoRootClass(String doRootClass) {
+		this.doRootClass = doRootClass;
+	}
+
+	/**
 	 * @param database
 	 *            the database to set
 	 */
@@ -266,13 +301,6 @@ public class DatabaseConfig {
 	}
 
 	/**
-	 * @return the useCache
-	 */
-	public final String getUseCache() {
-		return useCache;
-	}
-
-	/**
 	 * @param useCache
 	 *            the useCache to set
 	 */
@@ -287,4 +315,5 @@ public class DatabaseConfig {
 	public final void setProperties(Properties properties) {
 		this.properties = properties;
 	}
+
 }

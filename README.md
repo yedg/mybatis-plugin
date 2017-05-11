@@ -123,6 +123,8 @@ jdbcUserId		|Database user		|	|false
 jdbcPassword	|Database password	|	|false
 tableNames		|Comma delimited list of table names to generate|all tables of current database|false
 tablePrefix		|For example, table name: wp_xxxx, the word 'wp' is the table prefix||false
+doSuffix		|For example, DO, the object name is xxxDO||false
+doRootClass		|Data Object super class||false
 database		|Database			|	|true
 dbName			|Database name, mysql，hsqldb etc.||true
 packages		|Java package name, com.tqlab.test etc.||true

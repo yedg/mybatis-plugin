@@ -40,8 +40,7 @@ public class MybatisExecutor {
 	private boolean overwrite;
 	private DatabaseConfig config;
 
-	public MybatisExecutor(Log log, File outputDirectory, String packages,
-			boolean overwrite, DatabaseConfig config) {
+	public MybatisExecutor(Log log, File outputDirectory, String packages, boolean overwrite, DatabaseConfig config) {
 		this.log = log;
 		this.outputDirectory = outputDirectory;
 		this.packages = packages;
@@ -54,8 +53,7 @@ public class MybatisExecutor {
 	 * @throws IOException
 	 * 
 	 */
-	public void execute(MybatisExecutorCallback callback) throws IOException,
-			MojoExecutionException {
+	public void execute(MybatisExecutorCallback callback) throws IOException, MojoExecutionException {
 
 		if (null == config.getDbName()) {
 			return;
@@ -74,17 +72,14 @@ public class MybatisExecutor {
 		}
 		info.putAll(properties);
 
-		Database databaseObj = new DatabaseFactoryImpl().getDatabase(
-				DatabaseEnum.getDatabaseEnum(config.getDbName()),
-				config.getDatabase(), getJDBCUrl(), info,
-				config.getJdbcDriver());
+		Database databaseObj = new DatabaseFactoryImpl().getDatabase(DatabaseEnum.getDatabaseEnum(config.getDbName()),
+				config.getDatabase(), getJDBCUrl(), info, config.getJdbcDriver());
 
 		runScriptIfNecessary(databaseObj);
 
 		Set<String> fullyqualifiedTables = new HashSet<String>();
 		if (StringUtility.stringHasValue(config.getTableNames())) {
-			StringTokenizer st = new StringTokenizer(config.getTableNames(),
-					","); //$NON-NLS-1$
+			StringTokenizer st = new StringTokenizer(config.getTableNames(), ","); //$NON-NLS-1$
 			while (st.hasMoreTokens()) {
 				String s = st.nextToken().trim();
 				fullyqualifiedTables.add(s);
@@ -101,10 +96,9 @@ public class MybatisExecutor {
 
 		String tablesArray[] = fullyqualifiedTables.toArray(new String[0]);
 		MybatisCreater creater = new MybatisCreaterImpl(properties);
-		List<MybatisBean> list = creater.create(databaseObj, getJDBCUrl(),
-				config.getDatabase(), config.getJdbcUserId(),
-				getJDBCPassword(), packages, outputDirectory.getAbsolutePath(),
-				overwrite, getDbTables(), tablesArray);
+		List<MybatisBean> list = creater.create(databaseObj, getJDBCUrl(), config.getDoSuffix(),
+				config.getDoRootClass(), config.getDatabase(), config.getJdbcUserId(), getJDBCPassword(), packages,
+				outputDirectory.getAbsolutePath(), overwrite, getDbTables(), tablesArray);
 		if (null == list || list.size() == 0) {
 			return;
 		}
@@ -168,8 +162,7 @@ public class MybatisExecutor {
 	private Properties buildProperties() {
 		Properties properties = new Properties();
 		if (StringUtils.isNotBlank(config.getSqlTemplatePath())) {
-			properties.put(Constants.SQL_TEMPLATE_PATH,
-					config.getSqlTemplatePath());
+			properties.put(Constants.SQL_TEMPLATE_PATH, config.getSqlTemplatePath());
 		}
 		if (StringUtils.isNotBlank(config.getUseCache())) {
 			properties.put(Constants.USE_CACHE, config.getUseCache());
@@ -213,8 +206,7 @@ public class MybatisExecutor {
 		if (StringUtils.isBlank(config.getJdbcURL())) {
 			return " ";
 		}
-		final DatabaseEnum databaseEnum = DatabaseEnum.getDatabaseEnum(config
-				.getDbName());
+		final DatabaseEnum databaseEnum = DatabaseEnum.getDatabaseEnum(config.getDbName());
 		String jdbcURL = config.getJdbcURL();
 		if (databaseEnum == DatabaseEnum.HSQLDB) {
 			jdbcURL = jdbcURL.replace("\\", "/");
@@ -222,15 +214,13 @@ public class MybatisExecutor {
 		return jdbcURL;
 	}
 
-	private void runScriptIfNecessary(Database database)
-			throws MojoExecutionException {
+	private void runScriptIfNecessary(Database database) throws MojoExecutionException {
 		if (config.getSqlScript() == null) {
 			return;
 		}
 
-		SqlScriptRunner scriptRunner = new SqlScriptRunner(
-				config.getSqlScript(), database.getDriverClass(), getJDBCUrl(),
-				config.getJdbcUserId(), getJDBCPassword());
+		SqlScriptRunner scriptRunner = new SqlScriptRunner(config.getSqlScript(), database.getDriverClass(),
+				getJDBCUrl(), config.getJdbcUserId(), getJDBCPassword());
 		scriptRunner.executeScript();
 	}
 
