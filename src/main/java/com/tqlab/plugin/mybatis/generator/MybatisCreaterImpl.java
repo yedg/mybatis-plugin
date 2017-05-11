@@ -281,7 +281,7 @@ public class MybatisCreaterImpl implements MybatisCreater {
 
 	private String getTableString(final DatabaseEnum dbEnum, final Database database, final String tableName) {
 
-		LOGGER.info("getTableString >>> " + tableName);
+		LOGGER.info("getTableString >>> " + TableHolder.getTableAlias(tableName));
 
 		final ColumnResult result = database.getColumns(tableName);
 		final StringBuffer buf = new StringBuffer(300);
@@ -290,7 +290,7 @@ public class MybatisCreaterImpl implements MybatisCreater {
 		buf.append(tableName);
 		buf.append("\" ");
 		buf.append("domainObjectName=\"");
-		buf.append(getObjectName(tableName));
+		buf.append(getObjectName(TableHolder.getTableAlias(tableName)));
 		buf.append("\" ");
 		buf.append("enableSelectByPrimaryKey=\"true\" ");
 		buf.append("enableUpdateByPrimaryKey=\"true\" ");
