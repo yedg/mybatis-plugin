@@ -123,6 +123,8 @@ public class MybatisCreaterImpl implements MybatisCreater {
 		sb.append(Constants.LINE_SEPARATOR);
 		sb.append(Constants.LINE_SEPARATOR);
 
+		sb.append("    <property name=\"javaFileEncoding\" value=\"UTF-8\" />");
+		sb.append(Constants.LINE_SEPARATOR);
 		if (StringUtils.isNotBlank(doSuffix)) {
 			sb.append("    <property name=\"doSuffix\" value=\"" + doSuffix + "\" />");
 			sb.append(Constants.LINE_SEPARATOR);

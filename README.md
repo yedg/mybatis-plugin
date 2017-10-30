@@ -126,7 +126,7 @@ tablePrefix		|For example, table name: wp_xxxx, the word 'wp' is the table prefi
 doSuffix		|For example, DO, the object name is xxxDO||false
 doRootClass		|Data Object super class||false
 database		|Database			|	|true
-dbName			|Database name, mysql，hsqldb etc.||true
+dbName			|Database name, mysql, hsqldb etc.||true
 packages		|Java package name, com.tqlab.test etc.||true
 overwrite		| Overwrite the exist code, config file or not.|false|false
 sqlTemplatePath	|SqlMapper template path||true
