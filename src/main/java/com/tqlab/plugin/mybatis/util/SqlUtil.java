@@ -28,7 +28,7 @@ public final class SqlUtil {
 	/**
 	 * Such as #{key,jdbcType=BIGINT}
 	 */
-	private static final String PARAM_PATTERN = "#\\{[a-zA-Z,=\\-\\_\\s]+\\}";
+	private static final String PARAM_PATTERN = "#\\{[a-zA-Z,=\\-\\_\\s\\d]+\\}";
 
 	/**
 	 * TOP #{size,jdbcType=BIGINT}
