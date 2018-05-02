@@ -39,8 +39,9 @@ public class Config {
 	public String getCacheValue(final String classFQN) {
 
 		for (CacheConfigItem item : items) {
-			if (item.getClassRegexp().matcher(classFQN).matches())
-				return item.getCacheValue();
+			if (item.getClassRegexp().matcher(classFQN).matches()) {
+                return item.getCacheValue();
+            }
 		}
 		return null;
 
@@ -49,6 +50,8 @@ public class Config {
 	public boolean isUseCache() {
 		return "true".equalsIgnoreCase((String) props.get(Constants.USE_CACHE));
 	}
+
+	public boolean isSpringBoot(){return "true".equalsIgnoreCase((String) props.get(Constants.SPRINGBOOT));}
 
 	public String getTablePrefix() {
 		String prefix = (String) props.get(Constants.TABLE_PREFIX);
