@@ -4,17 +4,17 @@ import java.io.IOException;
 
 public interface MybatisExecutorCallback {
 
-	String getJdbcConfigPostfix();
+    String getJdbcConfigPostfix();
 
-	String getStringConfigPostfix();
+    String getStringConfigPostfix();
 
-	String getOsgiConfigPostfix();
+    String getOsgiConfigPostfix();
 
-	void onWriteJdbcConfig(String str);
+    void onWriteJdbcConfig(String str);
 
-	void onWriteSpringConfig(String str);
+    void onWriteSpringConfig(String str);
 
-	void onWriteOsgiConfig(String str);
+    void onWriteOsgiConfig(String str);
 
-	void onFinsh(boolean overwrite) throws IOException;
+    void onFinsh(boolean overwrite) throws IOException;
 }

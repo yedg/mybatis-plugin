@@ -20,7 +20,7 @@ Single database:
 			<plugin>
 				<groupId>com.tqlab.plugin</groupId>
 				<artifactId>tqlab-mybatis-plugin</artifactId>
-				<version>1.0.6</version>
+				<version>1.0.7</version>
 				<executions>
 					<execution>
 						<id>Generate MyBatis Artifacts</id>
