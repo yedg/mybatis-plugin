@@ -36,6 +36,7 @@ class SqlScriptRunner {
 
     private static final Logger LOGGER = Logger
         .getLogger(SqlScriptRunner.class);
+    private static final String CLASSPATH = "classpath:";
 
     private final transient String driver;
     private final transient String url;
@@ -131,7 +132,7 @@ class SqlScriptRunner {
         String line;
 
         while ((line = br.readLine()) != null) {
-            if (line.startsWith("--")) { //$NON-NLS-1$
+            if (line.startsWith("--")) {
                 continue;
             }
 
@@ -139,7 +140,7 @@ class SqlScriptRunner {
                 continue;
             }
 
-            if (line.endsWith(";")) { //$NON-NLS-1$
+            if (line.endsWith(";")) {
                 sb.append(line.substring(0, line.length() - 1));
                 break;
             } else {
@@ -151,7 +152,7 @@ class SqlScriptRunner {
         String s = sb.toString().trim();
 
         if (s.length() > 0) {
-            LOGGER.debug((Messages.getString("Progress.13", s))); //$NON-NLS-1$
+            LOGGER.debug((Messages.getString("Progress.13", s)));
         }
 
         return s.length() > 0 ? s : null;
@@ -161,8 +162,8 @@ class SqlScriptRunner {
         IOException {
         BufferedReader answer;
 
-        if (sourceFile.startsWith("classpath:")) {
-            String resource = sourceFile.substring("classpath:".length());
+        if (sourceFile.startsWith(CLASSPATH)) {
+            String resource = sourceFile.substring(CLASSPATH.length());
             InputStream is = Thread.currentThread().getContextClassLoader()
                 .getResourceAsStream(resource);
             if (is == null) {

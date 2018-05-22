@@ -33,6 +33,8 @@ import java.util.Properties;
 
 /**
  * Goal which generates MyBatis/iBATIS artifacts.
+ *
+ * @author John Lee
  */
 @Mojo(name = "generate", defaultPhase = LifecyclePhase.GENERATE_SOURCES)
 @Execute(goal = "generate", phase = LifecyclePhase.GENERATE_SOURCES)
@@ -185,6 +187,7 @@ public class MyBatisGeneratorMojo extends AbstractMojo {
         }
     }
 
+    @Override
     public void execute() throws MojoExecutionException {
 
         // load log4j
@@ -221,7 +224,7 @@ public class MyBatisGeneratorMojo extends AbstractMojo {
                     this.isOverwrite(), config);
                 executor.execute(callback);
             }
-            callback.onFinsh(this.isOverwrite());
+            callback.onFinish(this.isOverwrite());
         } catch (IOException e) {
             throw new MojoExecutionException("", e);
         }
@@ -267,7 +270,7 @@ public class MyBatisGeneratorMojo extends AbstractMojo {
             }
 
             @Override
-            public void onFinsh(boolean overwrite) throws IOException {
+            public void onFinish(boolean overwrite) throws IOException {
 
                 if (jdbcConfig.size() > 0) {
                     this.write(outputDirectory.getAbsolutePath() + File.separator + "src/main/resources/",
@@ -296,7 +299,7 @@ public class MyBatisGeneratorMojo extends AbstractMojo {
             }
 
             @Override
-            public String getStringConfigPostfix() {
+            public String getSpringConfigPostfix() {
                 return springConfig.size() == 0 ? "" : "." + springConfig.size();
             }
 

@@ -29,7 +29,7 @@ public class MybatisBaseRecordGenerator extends AbstractJavaGenerator {
     @Override
     public List<CompilationUnit> getCompilationUnits() {
         FullyQualifiedTable table = introspectedTable.getFullyQualifiedTable();
-        progressCallback.startTask(getString("Progress.8", table.toString())); //$NON-NLS-1$
+        progressCallback.startTask(getString("Progress.8", table.toString()));
         Plugin plugins = context.getPlugins();
         CommentGenerator commentGenerator = context.getCommentGenerator();
 
@@ -140,16 +140,16 @@ public class MybatisBaseRecordGenerator extends AbstractJavaGenerator {
         StringBuilder sb = new StringBuilder();
         if (introspectedTable.getRules().generatePrimaryKeyClass()) {
             boolean comma = false;
-            sb.append("super("); //$NON-NLS-1$
+            sb.append("super(");
             for (IntrospectedColumn introspectedColumn : introspectedTable.getPrimaryKeyColumns()) {
                 if (comma) {
-                    sb.append(", "); //$NON-NLS-1$
+                    sb.append(", ");
                 } else {
                     comma = true;
                 }
                 sb.append(introspectedColumn.getJavaProperty());
             }
-            sb.append(");"); //$NON-NLS-1$
+            sb.append(");");
             method.addBodyLine(sb.toString());
         }
 
@@ -157,9 +157,9 @@ public class MybatisBaseRecordGenerator extends AbstractJavaGenerator {
 
         for (IntrospectedColumn introspectedColumn : introspectedColumns) {
             sb.setLength(0);
-            sb.append("this."); //$NON-NLS-1$
+            sb.append("this.");
             sb.append(introspectedColumn.getJavaProperty());
-            sb.append(" = "); //$NON-NLS-1$
+            sb.append(" = ");
             sb.append(introspectedColumn.getJavaProperty());
             sb.append(';');
             method.addBodyLine(sb.toString());

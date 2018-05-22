@@ -39,7 +39,6 @@ import java.util.regex.Pattern;
 
 /**
  * @author John Lee
- *
  */
 public class SqlTempleatePluginAdapter extends PluginAdapter {
 
@@ -47,16 +46,22 @@ public class SqlTempleatePluginAdapter extends PluginAdapter {
     private static final String WITH_XML = ".xml";
     private static final String INCLUDE
         = "<include(\\s)*refid(\\s)*=(\\s)*(\\\\)?(\\s)*\"[\\w-]+(\\s)*(\\\\)?\"(\\s)*/>";
+    private static final String UPDATE = "update";
+    private static final String DELETE = "delete";
+    private static final String INSERT = "insert";
+    private static final int NAME_MIN_LENGTH = 2;
 
-    private Map<String, DbTable> map = new HashMap<String, DbTable>();
-    private Map<String, GeneratedJavaFile> maps = new HashMap<String, GeneratedJavaFile>();
+    private Map<String, DbTable> map = new HashMap<String, DbTable>(8);
+    private Map<String, GeneratedJavaFile> maps = new HashMap<String, GeneratedJavaFile>(8);
 
     private Config config;
 
+    @Override
     public void setContext(Context context) {
         super.setContext(context);
     }
 
+    @Override
     public void setProperties(Properties properties) {
         super.setProperties(properties);
 
@@ -153,14 +158,14 @@ public class SqlTempleatePluginAdapter extends PluginAdapter {
                 Parameter newParam = new Parameter(p.getType(), p.getName());
                 list.add(newParam);
             } else if (list.size() > 0) {
-                importedTypes.add(new FullyQualifiedJavaType("org.apache.ibatis.annotations.Param")); //$NON-NLS-1$
+                importedTypes.add(new FullyQualifiedJavaType("org.apache.ibatis.annotations.Param"));
             }
 
             final String[] comments = operation.getComment() == null ? null : operation.getComment().split("\n");
             addGeneralMethodComment(method, introspectedTable, list, comments);
 
             for (Parameter p : list) {
-                method.addParameter(p); // $NON-NLS-1$
+                method.addParameter(p);
                 importedTypes.add(p.getType());
             }
 
@@ -172,7 +177,7 @@ public class SqlTempleatePluginAdapter extends PluginAdapter {
                     String name = option.getName();
                     buf.append(name);
                     buf.append("=");
-                    if (name.equals("keyProperty") || name.equals("keyColumn")) {
+                    if ("keyProperty".equals(name) || "keyColumn".equals(name)) {
                         buf.append("\"");
                         buf.append(option.getValue());
                         buf.append("\"");
@@ -203,8 +208,7 @@ public class SqlTempleatePluginAdapter extends PluginAdapter {
             try {
                 statement = CCJSqlParserUtil.parse(parseSql);
             } catch (Throwable e) {
-                System.err.print("parse sql error: " + parseSql);
-                // e.printStackTrace();
+
             }
         } else {
             String tempSql = SqlUtil.filterXml(sql.toLowerCase(Locale.getDefault()), "");
@@ -212,9 +216,7 @@ public class SqlTempleatePluginAdapter extends PluginAdapter {
             try {
                 statement = CCJSqlParserUtil.parse(SqlUtil.sql(tempSql));
             } catch (Throwable e) {
-                //
-                System.err.print("parse sql error: " + tempSql);
-                // e.printStackTrace();
+
             }
         }
 
@@ -222,11 +224,11 @@ public class SqlTempleatePluginAdapter extends PluginAdapter {
         if (null == statement) {
             String tempSql = SqlUtil.filterXml(sql.toLowerCase(Locale.getDefault()), "");
             tempSql = SqlUtil.filterSql(tempSql).trim();
-            if (tempSql.startsWith("update")) {
+            if (tempSql.startsWith(UPDATE)) {
                 statement = new Update();
-            } else if (tempSql.startsWith("delete")) {
+            } else if (tempSql.startsWith(DELETE)) {
                 statement = new Delete();
-            } else if (tempSql.startsWith("insert")) {
+            } else if (tempSql.startsWith(INSERT)) {
                 statement = new Insert();
             } else {
                 statement = new Select();
@@ -286,7 +288,8 @@ public class SqlTempleatePluginAdapter extends PluginAdapter {
         boolean hasSelectedBLOB = this.hasSelectedBLOB(introspectedTable, (Select)statement);
         String name = parameterType.getShortName();
         if (!hasSelectedBLOB && introspectedTable.hasBLOBColumns()) {
-            name = name.substring(0, name.length() - 9); // delete BLOBs
+            // delete BLOBs
+            name = name.substring(0, name.length() - 9);
             StringBuffer type = new StringBuffer();
             if (StringUtils.isNotBlank(parameterType.getPackageName())) {
                 type.append(parameterType.getPackageName());
@@ -350,7 +353,7 @@ public class SqlTempleatePluginAdapter extends PluginAdapter {
     private FullyQualifiedJavaType getSelect(DbTableOperation operation, Interface interfaze, String name) {
         FullyQualifiedJavaType type = new FullyQualifiedJavaType(name);
         if (operation.isMany()) {
-            interfaze.addImportedType(new FullyQualifiedJavaType("java.util.List")); //$NON-NLS-1$
+            interfaze.addImportedType(new FullyQualifiedJavaType("java.util.List"));
             String s = "java.util.List<" + name + ">";
             return new FullyQualifiedJavaType(s);
         } else {
@@ -377,7 +380,7 @@ public class SqlTempleatePluginAdapter extends PluginAdapter {
 
             parseSqlParameter(list, sql);
             for (String param : list) {
-                String s[] = param.split(",");
+                String[] s = param.split(",");
                 FullyQualifiedJavaType type = null;
                 if (s.length == 1) {
                     continue;
@@ -391,7 +394,7 @@ public class SqlTempleatePluginAdapter extends PluginAdapter {
         } else {
             FullyQualifiedJavaType type = new FullyQualifiedJavaType(parameterType);
             String name = type.getShortName();
-            if (name.length() > 2) {
+            if (name.length() > NAME_MIN_LENGTH) {
                 name = name.substring(0, 1).toLowerCase() + name.substring(1);
             } else {
                 name = name.toLowerCase();
@@ -431,7 +434,6 @@ public class SqlTempleatePluginAdapter extends PluginAdapter {
     }
 
     /**
-     *
      * @param list
      * @param sql
      * @return
@@ -467,10 +469,10 @@ public class SqlTempleatePluginAdapter extends PluginAdapter {
 
         StringBuilder sb = new StringBuilder();
 
-        method.addJavaDocLine("/**"); //$NON-NLS-1$
-        method.addJavaDocLine(" * This method was generated by MyBatis Generator."); //$NON-NLS-1$
+        method.addJavaDocLine("/**");
+        method.addJavaDocLine(" * This method was generated by MyBatis Generator.");
 
-        sb.append(" * This method corresponds to the database table "); //$NON-NLS-1$
+        sb.append(" * This method corresponds to the database table ");
         sb.append(introspectedTable.getFullyQualifiedTable());
         method.addJavaDocLine(sb.toString());
 
@@ -479,7 +481,7 @@ public class SqlTempleatePluginAdapter extends PluginAdapter {
                 sb.setLength(0);
                 sb.append(" * ");
                 sb.append(comment.trim());
-                method.addJavaDocLine(sb.toString()); // $NON-NLS-1$
+                method.addJavaDocLine(sb.toString());
             }
         }
 
@@ -490,7 +492,7 @@ public class SqlTempleatePluginAdapter extends PluginAdapter {
         }
         method.addJavaDocLine(" * @return ");
 
-        method.addJavaDocLine(" */"); //$NON-NLS-1$
+        method.addJavaDocLine(" */");
     }
 
     @Override

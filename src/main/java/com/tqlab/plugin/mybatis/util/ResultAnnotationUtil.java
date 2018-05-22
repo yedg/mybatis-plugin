@@ -23,9 +23,9 @@ public final class ResultAnnotationUtil {
                                              final String column, final String javaProperty,
                                              final String jdbcType) {
         final StringBuilder buf = new StringBuilder(64);
-        buf.append("@Result(column=\""); //$NON-NLS-1$
+        buf.append("@Result(column=\"");
         buf.append(column);
-        buf.append("\", property=\""); //$NON-NLS-1$
+        buf.append("\", property=\"");
         buf.append(javaProperty);
         buf.append((char)'"');
         if (StringUtils.isNotBlank(jdbcType)) {

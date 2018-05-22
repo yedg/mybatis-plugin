@@ -5,6 +5,9 @@ import org.mybatis.generator.api.dom.java.FullyQualifiedJavaType;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @author John Lee
+ */
 public class DbSelectResult {
 
     private String objectName;

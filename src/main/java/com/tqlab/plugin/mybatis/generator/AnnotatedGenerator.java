@@ -34,9 +34,10 @@ import static org.mybatis.generator.api.dom.OutputUtilities.javaIndent;
 
 /**
  * @author John Lee
- *
  */
 public class AnnotatedGenerator extends AbstractJavaMapperMethodGenerator {
+
+    private static final String COMMA = ",";
 
     public AnnotatedGenerator() {
         super();
@@ -74,8 +75,9 @@ public class AnnotatedGenerator extends AbstractJavaMapperMethodGenerator {
     }
 
     private void addAnnotatedResults(final Interface interfaze, final Method method, final DbSelectResult result) {
-        if (null != result
-            && ((null != result.getColumns() && result.getColumns().size() > 0) || (isBasicType(result)))) {
+        boolean checkResult = null != result
+            && ((null != result.getColumns() && result.getColumns().size() > 0) || (isBasicType(result)));
+        if (checkResult) {
             this.doAddAnnotatedResults(interfaze, method, result);
         } else {
             this.doAddAnnotatedResults(interfaze, method);
@@ -88,24 +90,22 @@ public class AnnotatedGenerator extends AbstractJavaMapperMethodGenerator {
     }
 
     /**
-     *
      * @param interfaze
      * @param method
-     * @param select
      */
     private void doAddAnnotatedResults(final Interface interfaze, final Method method) {
-        interfaze.addImportedType(new FullyQualifiedJavaType("org.apache.ibatis.type.JdbcType")); //$NON-NLS-1$
+        interfaze.addImportedType(new FullyQualifiedJavaType("org.apache.ibatis.type.JdbcType"));
 
         if (introspectedTable.isConstructorBased()) {
-            interfaze.addImportedType(new FullyQualifiedJavaType("org.apache.ibatis.annotations.Arg")); //$NON-NLS-1$
+            interfaze.addImportedType(new FullyQualifiedJavaType("org.apache.ibatis.annotations.Arg"));
             interfaze.addImportedType(
-                new FullyQualifiedJavaType("org.apache.ibatis.annotations.ConstructorArgs")); //$NON-NLS-1$
-            method.addAnnotation("@ConstructorArgs({"); //$NON-NLS-1$
+                new FullyQualifiedJavaType("org.apache.ibatis.annotations.ConstructorArgs"));
+            method.addAnnotation("@ConstructorArgs({");
         } else {
-            interfaze.addImportedType(new FullyQualifiedJavaType("org.apache.ibatis.annotations.Result")); //$NON-NLS-1$
+            interfaze.addImportedType(new FullyQualifiedJavaType("org.apache.ibatis.annotations.Result"));
             interfaze.addImportedType(
-                new FullyQualifiedJavaType("org.apache.ibatis.annotations.Results")); //$NON-NLS-1$
-            method.addAnnotation("@Results({"); //$NON-NLS-1$
+                new FullyQualifiedJavaType("org.apache.ibatis.annotations.Results"));
+            method.addAnnotation("@Results({");
         }
 
         StringBuilder sb = new StringBuilder();
@@ -136,7 +136,7 @@ public class AnnotatedGenerator extends AbstractJavaMapperMethodGenerator {
                 getResultAnnotation(interfaze, introspectedColumn, false, introspectedTable.isConstructorBased()));
 
             if (iterNonPk.hasNext()) {
-                sb.append(',');
+                sb.append(COMMA);
             }
 
             method.addAnnotation(sb.toString());
@@ -145,20 +145,20 @@ public class AnnotatedGenerator extends AbstractJavaMapperMethodGenerator {
         List<String> annotations = method.getAnnotations();
         // remove last item and Check whether the comma at the end
         String s = annotations.remove(annotations.size() - 1);
-        if (s.endsWith(",")) {
+        if (s.endsWith(COMMA)) {
             s = s.substring(0, s.length() - 1);
         }
         method.getAnnotations().add(s);
-        method.addAnnotation("})"); //$NON-NLS-1$
+        method.addAnnotation("})");
     }
 
     private void doAddAnnotatedResults(final Interface interfaze, final Method method, final DbSelectResult result) {
         if (null == result || null == result.getColumns() || result.getColumns().size() == 0) {
             return;
         }
-        interfaze.addImportedType(new FullyQualifiedJavaType("org.apache.ibatis.annotations.Result")); //$NON-NLS-1$
-        interfaze.addImportedType(new FullyQualifiedJavaType("org.apache.ibatis.annotations.Results")); //$NON-NLS-1$
-        method.addAnnotation("@Results({"); //$NON-NLS-1$
+        interfaze.addImportedType(new FullyQualifiedJavaType("org.apache.ibatis.annotations.Result"));
+        interfaze.addImportedType(new FullyQualifiedJavaType("org.apache.ibatis.annotations.Results"));
+        method.addAnnotation("@Results({");
         List<DbColumn> list = result.getColumns();
         StringBuilder sb = new StringBuilder();
         for (Iterator<DbColumn> i = list.iterator(); i.hasNext(); ) {
@@ -168,10 +168,10 @@ public class AnnotatedGenerator extends AbstractJavaMapperMethodGenerator {
             sb.append(ResultAnnotationUtil.getResultAnnotation(interfaze, column.getName(), column.getJavaProperty(),
                 column.getJdbcType()));
             if (i.hasNext()) {
-                sb.append(',');
+                sb.append(COMMA);
             }
             method.addAnnotation(sb.toString());
         }
-        method.addAnnotation("})"); //$NON-NLS-1$
+        method.addAnnotation("})");
     }
 }

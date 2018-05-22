@@ -8,8 +8,8 @@ import com.tqlab.plugin.mybatis.database.DatabaseEnum;
 import com.tqlab.plugin.mybatis.database.DatabaseFactoryImpl;
 import com.tqlab.plugin.mybatis.generator.DbTable;
 import com.tqlab.plugin.mybatis.generator.MybatisBean;
-import com.tqlab.plugin.mybatis.generator.MybatisCreater;
-import com.tqlab.plugin.mybatis.generator.MybatisCreaterImpl;
+import com.tqlab.plugin.mybatis.generator.MybatisCreator;
+import com.tqlab.plugin.mybatis.generator.MybatisCreatorImpl;
 import com.tqlab.plugin.mybatis.util.Constants;
 import com.tqlab.plugin.mybatis.util.SqlTemplateParserUtil;
 import org.apache.commons.lang.StringUtils;
@@ -26,6 +26,7 @@ import java.util.*;
  */
 public class MybatisExecutor {
 
+    private static final String TRUE = "true";
     private Log log;
     private File outputDirectory;
     private String packages;
@@ -70,7 +71,7 @@ public class MybatisExecutor {
 
         Set<String> fullyqualifiedTables = new HashSet<String>();
         if (StringUtility.stringHasValue(config.getTableNames())) {
-            StringTokenizer st = new StringTokenizer(config.getTableNames(), ","); //$NON-NLS-1$
+            StringTokenizer st = new StringTokenizer(config.getTableNames(), ",");
             while (st.hasMoreTokens()) {
                 String s = st.nextToken().trim();
                 fullyqualifiedTables.add(s);
@@ -85,8 +86,8 @@ public class MybatisExecutor {
             fullyqualifiedTables.addAll(databaseObj.getTablesName());
         }
 
-        String tablesArray[] = fullyqualifiedTables.toArray(new String[0]);
-        MybatisCreater creater = new MybatisCreaterImpl(properties);
+        String[] tablesArray = fullyqualifiedTables.toArray(new String[0]);
+        MybatisCreator creater = new MybatisCreatorImpl(properties);
         List<MybatisBean> list = creater.create(databaseObj, getJDBCUrl(), config.getDoSuffix(),
             config.getDoRootClass(), config.getDatabase(), config.getJdbcUserId(), getJDBCPassword(), packages,
             outputDirectory.getAbsolutePath(), overwrite, getDbTables(), tablesArray);
@@ -94,7 +95,7 @@ public class MybatisExecutor {
             return;
         }
 
-        if ("true".equalsIgnoreCase(config.getGenerateJdbcConfig())) {
+        if (TRUE.equalsIgnoreCase(config.getGenerateJdbcConfig())) {
             // /////////////////////////////////////////////////////////////
             // jdbc.properties
             // /////////////////////////////////////////////////////////////
@@ -123,7 +124,7 @@ public class MybatisExecutor {
             callback.onWriteJdbcConfig(replaceBuf.toString());
         }
 
-        if ("true".equalsIgnoreCase(config.getGenerateSpringConfig())) {
+        if (TRUE.equalsIgnoreCase(config.getGenerateSpringConfig())) {
             // /////////////////////////////////////////////////////////////
             // common-db-mapper.xml
             // /////////////////////////////////////////////////////////////
@@ -136,7 +137,7 @@ public class MybatisExecutor {
             callback.onWriteSpringConfig(replaceBuf.toString());
         }
 
-        if ("true".equalsIgnoreCase(config.getGenerateOsgiConfig())) {
+        if (TRUE.equalsIgnoreCase(config.getGenerateOsgiConfig())) {
             // /////////////////////////////////////////////////////////////
             // common-dal-osgi.xml
             // /////////////////////////////////////////////////////////////
@@ -174,7 +175,7 @@ public class MybatisExecutor {
 
     private Map<String, DbTable> getDbTables() {
 
-        Map<String, DbTable> map = new HashMap<String, DbTable>();
+        Map<String, DbTable> map = new HashMap<String, DbTable>(8);
         File sqlTemplateDir = new File(config.getSqlTemplatePath());
         if (!sqlTemplateDir.exists()) {
             return map;

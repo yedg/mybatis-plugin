@@ -16,7 +16,7 @@ public class TableHolder {
     public static void addTable(String name, String alias) {
         Map<String, String> map = TABLE.get();
         if (null == map) {
-            map = new ConcurrentHashMap<String, String>();
+            map = new ConcurrentHashMap<String, String>(8);
             TABLE.set(map);
         }
         map.put(name, alias);
@@ -31,6 +31,6 @@ public class TableHolder {
     }
 
     public static void clear() {
-        TABLE.set(null);
+        TABLE.remove();
     }
 }

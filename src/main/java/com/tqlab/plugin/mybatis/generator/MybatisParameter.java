@@ -50,6 +50,7 @@ public class MybatisParameter extends Parameter {
         super(type, name, annotation, isVarargs);
     }
 
+    @Override
     public void addAnnotation(String annotation) {
         if (null != annotation && !"".equals(annotation)) {
             super.addAnnotation(annotation);

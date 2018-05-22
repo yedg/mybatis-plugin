@@ -12,10 +12,11 @@ import org.mybatis.generator.api.dom.java.Method;
 public interface GeneratorCallback {
 
     /**
+     * Generator callback
+     *
      * @param interfaze
      * @param method
-     * @param result
      */
-    public void addAnnotatedResults(final Interface interfaze,
-                                    final Method method);
+    void addAnnotatedResults(final Interface interfaze,
+                             final Method method);
 }

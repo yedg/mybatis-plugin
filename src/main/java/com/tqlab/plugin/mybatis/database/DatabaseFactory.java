@@ -16,11 +16,11 @@ import java.util.Properties;
 
 /**
  * @author John Lee
- *
  */
 public interface DatabaseFactory {
 
     /**
+     * Get Database instance
      *
      * @param databaseEnum
      * @param database

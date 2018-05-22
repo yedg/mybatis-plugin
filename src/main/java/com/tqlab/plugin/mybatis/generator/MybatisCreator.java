@@ -19,15 +19,15 @@ import java.util.Map;
 
 /**
  * @author John Lee
- *
  */
-public interface MybatisCreater {
+public interface MybatisCreator {
 
     /**
+     * Create mybatis
      *
      * @param database
      * @param url
-     * @param doSuffix
+     * @param objectSuffix
      * @param doRootClass
      * @param databaseName
      * @param userName
@@ -36,9 +36,8 @@ public interface MybatisCreater {
      * @param dir
      * @param overwrite
      * @param dbTables
-     * @param tables
-     *            Specific the tables to create MYBATIS configuration. If tables
-     *            is null, all tables in the database will be used.
+     * @param tables       Specific the tables to create MYBATIS configuration. If tables is null, all tables in the
+     *                     database will be used.
      * @return
      */
     List<MybatisBean> create(Database database, String url, String objectSuffix, String doRootClass,

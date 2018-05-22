@@ -30,7 +30,7 @@ public class MybatisAnnotatedClientGenerator extends AnnotatedClientGenerator {
 
     @Override
     public List<CompilationUnit> getCompilationUnits() {
-        progressCallback.startTask(getString("Progress.17", //$NON-NLS-1$
+        progressCallback.startTask(getString("Progress.17",
             introspectedTable.getFullyQualifiedTable().toString()));
         CommentGenerator commentGenerator = context.getCommentGenerator();
 
@@ -84,6 +84,7 @@ public class MybatisAnnotatedClientGenerator extends AnnotatedClientGenerator {
         return answer;
     }
 
+    @Override
     public List<CompilationUnit> getExtraCompilationUnits() {
         boolean useLegacyBuilder = false;
 

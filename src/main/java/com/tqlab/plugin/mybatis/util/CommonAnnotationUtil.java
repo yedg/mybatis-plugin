@@ -32,9 +32,9 @@ public final class CommonAnnotationUtil {
     public static void addAnnotation(final Interface interfaze,
                                      final Method method, final boolean hasScript, final String sql,
                                      final Class<?> clazz) {
-        interfaze.addImportedType(new FullyQualifiedJavaType(clazz.getName())); //$NON-NLS-1$
+        interfaze.addImportedType(new FullyQualifiedJavaType(clazz.getName()));
         final StringBuilder buf = new StringBuilder();
-        method.addAnnotation("@" + clazz.getSimpleName() + "({"); //$NON-NLS-1$
+        method.addAnnotation("@" + clazz.getSimpleName() + "({");
         ScriptUtil.addScriptStart(hasScript, method);
         javaIndent(buf, 1);
         buf.append((char)'"');
@@ -43,6 +43,6 @@ public final class CommonAnnotationUtil {
         javaIndent(buf, 1);
         method.addAnnotation(buf.toString());
         ScriptUtil.addScriptEnd(hasScript, method);
-        method.addAnnotation("})"); //$NON-NLS-1$
+        method.addAnnotation("})");
     }
 }

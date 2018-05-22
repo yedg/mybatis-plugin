@@ -16,17 +16,18 @@ import java.util.Set;
 
 /**
  * @author John Lee
- *
  */
 public interface Database {
 
     /**
+     * Table names
      *
      * @return
      */
     Set<String> getTablesName();
 
     /**
+     * Columns
      *
      * @param tableName
      * @return
@@ -39,18 +40,21 @@ public interface Database {
     void close();
 
     /**
+     * Driver class
      *
      * @return
      */
     String getDriverClass();
 
     /**
+     * Database name
      *
      * @return
      */
     String getDatabase();
 
     /**
+     * DatabaseEnum
      *
      * @return
      */

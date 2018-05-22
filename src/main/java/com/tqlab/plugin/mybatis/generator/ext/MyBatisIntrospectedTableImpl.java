@@ -16,6 +16,7 @@ import java.util.List;
  */
 public class MyBatisIntrospectedTableImpl extends IntrospectedTableMyBatis3Impl {
 
+    @Override
     protected void calculateModelAttributes() {
         String pakkage = calculateJavaModelPackage();
 
@@ -24,8 +25,7 @@ public class MyBatisIntrospectedTableImpl extends IntrospectedTableMyBatis3Impl 
         sb.append('.');
         sb.append(fullyQualifiedTable.getDomainObjectName());
         sb.append(filterDoSuffix());
-        sb.append("Key"); //$NON-NLS-1$
-        setPrimaryKeyType(sb.toString());
+        sb.append("Key");
 
         sb.setLength(0);
         sb.append(pakkage);
@@ -39,7 +39,7 @@ public class MyBatisIntrospectedTableImpl extends IntrospectedTableMyBatis3Impl 
         sb.append('.');
         sb.append(fullyQualifiedTable.getDomainObjectName());
         sb.append(filterDoSuffix());
-        sb.append("WithBlobs"); //$NON-NLS-1$
+        sb.append("WithBlobs");
         setRecordWithBLOBsType(sb.toString());
 
         sb.setLength(0);
@@ -47,7 +47,7 @@ public class MyBatisIntrospectedTableImpl extends IntrospectedTableMyBatis3Impl 
         sb.append('.');
         sb.append(fullyQualifiedTable.getDomainObjectName());
         sb.append(filterDoSuffix());
-        sb.append("Example"); //$NON-NLS-1$
+        sb.append("Example");
         setExampleType(sb.toString());
     }
 
@@ -57,6 +57,7 @@ public class MyBatisIntrospectedTableImpl extends IntrospectedTableMyBatis3Impl 
      * @param warnings         the warnings
      * @param progressCallback the progress callback
      */
+    @Override
     protected void calculateJavaModelGenerators(List<String> warnings, ProgressCallback progressCallback) {
         if (getRules().generateExampleClass()) {
             AbstractJavaGenerator javaGenerator = new ExampleGenerator();
@@ -83,6 +84,7 @@ public class MyBatisIntrospectedTableImpl extends IntrospectedTableMyBatis3Impl 
         }
     }
 
+    @Override
     public String getFullyQualifiedTableNameAtRuntime() {
         String tableNameAtRuntime = super.getFullyQualifiedTableNameAtRuntime();
         if (null != TableHolder.getTableAlias(tableNameAtRuntime)) {
@@ -91,6 +93,7 @@ public class MyBatisIntrospectedTableImpl extends IntrospectedTableMyBatis3Impl 
         return tableNameAtRuntime;
     }
 
+    @Override
     public String getAliasedFullyQualifiedTableNameAtRuntime() {
         return getFullyQualifiedTableNameAtRuntime();
     }

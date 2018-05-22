@@ -87,6 +87,7 @@ public class MybatisBean {
         this.sqlSessionFactory = sqlSessionFactory;
     }
 
+    @Override
     public String toString() {
         StringBuffer buf = new StringBuffer("");
         buf.append("\t<bean id=\"" + beanId

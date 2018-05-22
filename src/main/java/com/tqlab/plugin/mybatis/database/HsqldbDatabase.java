@@ -14,12 +14,13 @@ import java.util.Properties;
 public class HsqldbDatabase extends AbstractDatabase {
 
     private static final String DRIVER = "org.hsqldb.jdbc.JDBCDriver";
+    private static final String LEFT_SQUARE_BRACKETS = "[";
+    private static final String RIGHT_SQUARE_BRACKETS = "]";
 
     /**
      * @param database
      * @param url
-     * @param user
-     * @param password
+     * @param properties
      */
     public HsqldbDatabase(final String database, final String url,
                           final Properties properties) {
@@ -31,6 +32,7 @@ public class HsqldbDatabase extends AbstractDatabase {
         return "SELECT * FROM INFORMATION_SCHEMA.SYSTEM_TABLES where TABLE_TYPE='TABLE';";
     }
 
+    @Override
     protected String getTableName(ResultSet resultSet) throws SQLException {
         String name = (String)resultSet.getObject("TABLE_NAME");
         if (null != name) {
@@ -58,12 +60,13 @@ public class HsqldbDatabase extends AbstractDatabase {
         if (null == column) {
             return null;
         }
+
         String columnName = column;
-        if (!columnName.startsWith("[")) {
-            columnName = "[" + columnName;
+        if (!columnName.startsWith(LEFT_SQUARE_BRACKETS)) {
+            columnName = LEFT_SQUARE_BRACKETS + columnName;
         }
-        if (!columnName.endsWith("]")) {
-            columnName = columnName + "]";
+        if (!columnName.endsWith(RIGHT_SQUARE_BRACKETS)) {
+            columnName = columnName + RIGHT_SQUARE_BRACKETS;
         }
 
         return columnName;
@@ -91,7 +94,8 @@ public class HsqldbDatabase extends AbstractDatabase {
             final String sql = getColumnsQuerySql(tableName);
             res = stmt.executeQuery(sql);
             ResultSetMetaData rsmd = res.getMetaData();
-            int colcount = rsmd.getColumnCount();// 取得全部列数
+            // 取得全部列数
+            int colcount = rsmd.getColumnCount();
 
             List<String> autoIncrementColumn = new ArrayList<String>();
             for (int i = 1; i <= colcount; i++) {

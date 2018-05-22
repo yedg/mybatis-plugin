@@ -60,19 +60,19 @@ public final class SelectAnnotationUtil {
         }
 
         interfaze.addImportedType(new FullyQualifiedJavaType(
-            "org.apache.ibatis.annotations.Select")); //$NON-NLS-1$
+            "org.apache.ibatis.annotations.Select"));
         final StringBuilder buf = new StringBuilder(256);
-        method.addAnnotation("@Select({"); //$NON-NLS-1$
+        method.addAnnotation("@Select({");
         ScriptUtil.addScriptStart(hasScript, method);
 
         javaIndent(buf, 1);
         buf.append(Constants.QUOTE);
-        buf.append(SqlUtil.pdataFilter(sql, hasScript)); //$NON-NLS-1$
+        buf.append(SqlUtil.pdataFilter(sql, hasScript));
         buf.append(Constants.QUOTE);
 
         method.addAnnotation(buf.toString());
 
         ScriptUtil.addScriptEnd(hasScript, method);
-        method.addAnnotation("})"); // $NO
+        method.addAnnotation("})");
     }
 }

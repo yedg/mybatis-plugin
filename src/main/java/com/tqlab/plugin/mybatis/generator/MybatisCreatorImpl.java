@@ -34,19 +34,22 @@ import java.util.Map.Entry;
 
 /**
  * @author John Lee
- *
  */
-public class MybatisCreaterImpl implements MybatisCreater {
+public class MybatisCreatorImpl implements MybatisCreator {
 
-    private static final Logger LOGGER = Logger.getLogger(MybatisCreaterImpl.class);
+    private static final Logger LOGGER = Logger.getLogger(MybatisCreatorImpl.class);
+    private static final String LOGOGRAM = "&";
+    private static final String LOGOGRAM_T = "&amp;";
+
     private Config config;
     private Properties properties;
 
-    public MybatisCreaterImpl(Properties properties) {
+    public MybatisCreatorImpl(Properties properties) {
         this.config = new Config(properties);
         this.properties = properties;
     }
 
+    @Override
     public List<MybatisBean> create(final Database database, final String jdbcUrl, final String doSuffix,
                                     final String doRootClass, final String databaseName, final String userName,
                                     final String password,
@@ -66,11 +69,11 @@ public class MybatisCreaterImpl implements MybatisCreater {
             }
         }
 
-        String tables[] = tableList.toArray(new String[0]);
+        String[] tables = tableList.toArray(new String[0]);
 
         String url = jdbcUrl;
-        if (StringUtils.isNotBlank(url) && url.contains("&") && !url.contains("&amp;")) {
-            url = url.replace("&", "&amp;");
+        if (StringUtils.isNotBlank(url) && url.contains(LOGOGRAM) && !url.contains(LOGOGRAM_T)) {
+            url = url.replace(LOGOGRAM, LOGOGRAM_T);
         }
 
         String dir = outputDir.replace(File.separator, "/");

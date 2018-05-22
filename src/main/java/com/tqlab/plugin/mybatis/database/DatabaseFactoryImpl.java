@@ -31,7 +31,7 @@ public class DatabaseFactoryImpl implements DatabaseFactory {
         AbstractDatabase result = null;
         switch (databaseEnum) {
             case MYSQL: {
-                result = new MySQLDatabase(database, url, properties);
+                result = new MysqlDatabase(database, url, properties);
                 break;
             }
             case HSQLDB: {

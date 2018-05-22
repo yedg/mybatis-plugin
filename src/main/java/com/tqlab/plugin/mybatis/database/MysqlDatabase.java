@@ -22,20 +22,18 @@ import java.util.Properties;
 
 /**
  * @author John Lee
- *
  */
-public class MySQLDatabase extends AbstractDatabase {
+public class MysqlDatabase extends AbstractDatabase {
 
     private static final String DRIVER = "com.mysql.jdbc.Driver";
+    private static final String GRAVE = "`";
 
     /**
-     *
      * @param database
      * @param url
-     * @param user
-     * @param password
+     * @param properties
      */
-    public MySQLDatabase(final String database, final String url, final Properties properties) {
+    public MysqlDatabase(final String database, final String url, final Properties properties) {
         super(DRIVER, database, url, properties);
     }
 
@@ -44,6 +42,7 @@ public class MySQLDatabase extends AbstractDatabase {
         return "show tables;";
     }
 
+    @Override
     protected String getTableName(final ResultSet resultSet) throws SQLException {
         String name = (String)resultSet.getObject(1);
         return name;
@@ -54,6 +53,7 @@ public class MySQLDatabase extends AbstractDatabase {
         return DatabaseEnum.MYSQL;
     }
 
+    @Override
     public ColumnResult getColumns(final String tableName) {
 
         final ColumnResult result = new ColumnResult();
@@ -108,11 +108,11 @@ public class MySQLDatabase extends AbstractDatabase {
             return null;
         }
         String tableName = table;
-        if (!tableName.startsWith("`")) {
-            tableName = "`" + tableName;
+        if (!tableName.startsWith(GRAVE)) {
+            tableName = GRAVE + tableName;
         }
-        if (!tableName.endsWith("`")) {
-            tableName = tableName + "`";
+        if (!tableName.endsWith(GRAVE)) {
+            tableName = tableName + GRAVE;
         }
         return "SHOW COLUMNS FROM " + tableName + "";
     }
@@ -123,11 +123,11 @@ public class MySQLDatabase extends AbstractDatabase {
             return null;
         }
         String columnName = column;
-        if (!columnName.startsWith("`")) {
-            columnName = "`" + columnName;
+        if (!columnName.startsWith(GRAVE)) {
+            columnName = GRAVE + columnName;
         }
-        if (!columnName.endsWith("`")) {
-            columnName = columnName + "`";
+        if (!columnName.endsWith(GRAVE)) {
+            columnName = columnName + GRAVE;
         }
         return columnName;
     }

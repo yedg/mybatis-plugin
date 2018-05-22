@@ -23,7 +23,6 @@ import java.util.Set;
 
 /**
  * @author John Lee
- *
  */
 public abstract class AbstractDatabase implements Database {
 
@@ -39,7 +38,6 @@ public abstract class AbstractDatabase implements Database {
     private transient Connection conn;
 
     /**
-     *
      * @param driverClass
      * @param database
      * @param url
@@ -56,21 +54,19 @@ public abstract class AbstractDatabase implements Database {
     /**
      * @return the driverClass
      */
+    @Override
     public final String getDriverClass() {
         return driverClass;
     }
 
     /**
-     * @param driverClass
-     *            the driverClass to set
+     * @param driverClass the driverClass to set
      */
     public final void setDriverClass(String driverClass) {
         this.driverClass = driverClass;
     }
 
     /**
-     *
-     *
      * @return
      * @throws SQLException
      */
@@ -163,9 +159,10 @@ public abstract class AbstractDatabase implements Database {
         return this.database;
     }
 
-    /*
-     * (non-Javadoc)
+    /**
+     * close
      */
+    @Override
     public void close() {
         try {
             if (conn != null) {
