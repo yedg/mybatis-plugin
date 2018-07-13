@@ -6,7 +6,7 @@ Mybatis Generator Plugin
 <dependency>
     <groupId>com.tqlab.plugin</groupId>
     <artifactId>tqlab-mybatis-plugin</artifactId>
-    <version>1.0.6</version>
+    <version>1.0.8</version>
 </dependency>
 ```
 
@@ -274,3 +274,7 @@ More sample: [https://github.com/tqlab/mybatis-plugin/blob/master/demo/src/main/
 2. Add mybatis Options annotation supported.
 3. Add alias name config supported.
 4. Add specific driver supported.
+
+### v1.0.8
+1. update jsqlparser version to 1.2
+2. Add @SelectKey supported

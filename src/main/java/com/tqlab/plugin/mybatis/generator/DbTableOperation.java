@@ -17,7 +17,6 @@ import java.util.List;
 
 /**
  * @author John Lee
- *
  */
 public class DbTableOperation {
 
@@ -30,6 +29,7 @@ public class DbTableOperation {
     private List<DbOption> options = new ArrayList<DbOption>();
     private List<DbParam> params = new ArrayList<DbParam>();
     private DbSelectResult result;
+    private DbSelectKey dbSelectKey;
 
     /**
      * @return the id
@@ -39,8 +39,7 @@ public class DbTableOperation {
     }
 
     /**
-     * @param id
-     *            the id to set
+     * @param id the id to set
      */
     public void setId(String id) {
         this.id = id;
@@ -54,8 +53,7 @@ public class DbTableOperation {
     }
 
     /**
-     * @param many
-     *            the many to set
+     * @param many the many to set
      */
     public void setMany(boolean many) {
         this.many = many;
@@ -69,8 +67,7 @@ public class DbTableOperation {
     }
 
     /**
-     * @param comment
-     *            the comment to set
+     * @param comment the comment to set
      */
     public void setComment(String comment) {
         this.comment = comment;
@@ -84,8 +81,7 @@ public class DbTableOperation {
     }
 
     /**
-     * @param sql
-     *            the sql to set
+     * @param sql the sql to set
      */
     public void setSql(String sql) {
         this.sql = sql;
@@ -99,8 +95,7 @@ public class DbTableOperation {
     }
 
     /**
-     * @param resultType
-     *            the resultType to set
+     * @param resultType the resultType to set
      */
     public void setResultType(String resultType) {
         this.resultType = resultType;
@@ -114,8 +109,7 @@ public class DbTableOperation {
     }
 
     /**
-     * @param parameterType
-     *            the parameterType to set
+     * @param parameterType the parameterType to set
      */
     public final void setParameterType(String parameterType) {
         this.parameterType = parameterType;
@@ -129,8 +123,7 @@ public class DbTableOperation {
     }
 
     /**
-     * @param options
-     *            the options to set
+     * @param option the options to set
      */
     public final void addOption(DbOption option) {
         if (null == option) {
@@ -152,8 +145,7 @@ public class DbTableOperation {
     }
 
     /**
-     * @param params
-     *            the param to add
+     * @param param the param to add
      */
     public final void addParams(DbParam param) {
         if (null == param) {
@@ -175,11 +167,18 @@ public class DbTableOperation {
     }
 
     /**
-     * @param result
-     *            the result to set
+     * @param result the result to set
      */
     public void setResult(DbSelectResult result) {
         this.result = result;
+    }
+
+    public DbSelectKey getDbSelectKey() {
+        return dbSelectKey;
+    }
+
+    public void setDbSelectKey(DbSelectKey dbSelectKey) {
+        this.dbSelectKey = dbSelectKey;
     }
 
     @Override

@@ -58,6 +58,12 @@ public final class SqlTemplateParserUtil {
     private static final String JDBC_TYPE = "jdbcType";
     private static final String COLUMN = "column";
     private static final String SQL_SESSION_FACTORY = "sqlSessionFactory";
+    private static final String SELECT_KEY = "selectKey";
+    private static final String STATEMENT = "statement";
+    private static final String KEY_PROPERTY = "keyProperty";
+    private static final String KEY_COLUMN = "keyColumn";
+    private static final String BEFORE = "before";
+    private static final String STATEMENT_TYPE = "statementType";
 
     private static final String MYBATIS_XSD_LOCAL = "/com/tqlab/plugin/mybatis/tqlab-mybatis-plugin.xsd";
 
@@ -206,6 +212,7 @@ public final class SqlTemplateParserUtil {
         Element comment = e.element(COMMNET);
         Element options = e.element(OPTIONS);
         Element params = e.element(PARAMS);
+        Element selectKey = e.element(SELECT_KEY);
 
         if (null == id || null == sql) {
             return null;
@@ -271,7 +278,7 @@ public final class SqlTemplateParserUtil {
 
                 index = s.indexOf('}');
                 String parameter = s.substring(0, index);
-                String []ss = parameter.split(",");
+                String[] ss = parameter.split(",");
                 String objectName = null;
                 FullyQualifiedJavaType type = null;
                 if (ss.length == 1) {
@@ -288,6 +295,23 @@ public final class SqlTemplateParserUtil {
             }
         } else if (null != parameterType) {
             operation.setParameterType(parameterType);
+        }
+
+        if (null != selectKey) {
+            String statement = selectKey.attributeValue(STATEMENT);
+            String keyProperty = selectKey.attributeValue(KEY_PROPERTY);
+            String resultTypeForSelectKey = selectKey.attributeValue(RESULT_TYPE);
+            String keyColumn = selectKey.attributeValue(KEY_COLUMN);
+            String before = selectKey.attributeValue(BEFORE);
+            String statementType = selectKey.attributeValue(STATEMENT_TYPE);
+            DbSelectKey dbSelectKey = new DbSelectKey();
+            dbSelectKey.setBefore(before);
+            dbSelectKey.setStatement(statement);
+            dbSelectKey.setKeyColumn(keyColumn);
+            dbSelectKey.setResultType(resultTypeForSelectKey);
+            dbSelectKey.setStatementType(statementType);
+            dbSelectKey.setKeyProperty(keyProperty);
+            operation.setDbSelectKey(dbSelectKey);
         }
         return operation;
     }

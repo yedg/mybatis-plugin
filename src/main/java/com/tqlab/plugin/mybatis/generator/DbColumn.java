@@ -49,7 +49,7 @@ public class DbColumn {
     }
 
     /**
-     * @param javatype the javaType to set
+     * @param javaType the javaType to set
      */
     public final void setJavaType(String javaType) {
         this.javaType = javaType;

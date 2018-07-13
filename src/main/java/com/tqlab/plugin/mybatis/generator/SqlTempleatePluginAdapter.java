@@ -169,6 +169,66 @@ public class SqlTempleatePluginAdapter extends PluginAdapter {
                 importedTypes.add(p.getType());
             }
 
+            DbSelectKey dbSelectKey = operation.getDbSelectKey();
+            if (null != dbSelectKey) {
+                importedTypes.add(new FullyQualifiedJavaType("org.apache.ibatis.annotations.SelectKey"));
+                String[] statements = dbSelectKey.getStatement().split(",");
+                StringBuffer buffer = new StringBuffer();
+                buffer.append("statement");
+                buffer.append("={");
+                for (String s : statements) {
+                    buffer.append("\"");
+                    buffer.append(s);
+                    buffer.append("\"");
+                    buffer.append(",");
+                }
+                buffer.setLength(buffer.length() - 1);
+                buffer.append("}, ");
+                if (null != dbSelectKey.getKeyProperty()) {
+                    buffer.append("keyProperty=");
+                    buffer.append("\"");
+                    buffer.append(dbSelectKey.getKeyProperty());
+                    buffer.append("\", ");
+                }
+
+                if (null != dbSelectKey.getBefore()) {
+                    buffer.append("before=");
+                    buffer.append(dbSelectKey.getBefore());
+                    buffer.append(", ");
+                }
+
+                if (null != dbSelectKey.getKeyColumn()) {
+                    buffer.append("keyColumn=");
+                    buffer.append("\"");
+                    buffer.append(dbSelectKey.getKeyColumn());
+                    buffer.append("\"");
+                    buffer.append(", ");
+                }
+
+                String resultType = dbSelectKey.getResultType();
+                if (null != resultType) {
+                    buffer.append("resultType=");
+                    buffer.append("\"");
+                    if (resultType.endsWith(".class")) {
+                        buffer.append(resultType);
+                    } else {
+                        buffer.append(resultType + ".class");
+                    }
+                    buffer.append("\", ");
+                }
+
+                if (null != dbSelectKey.getStatementType()) {
+                    buffer.append("statementType=");
+                    buffer.append("\"");
+                    buffer.append(dbSelectKey.getStatementType());
+                    buffer.append("\"");
+                    buffer.append(", ");
+                }
+
+                buffer.setLength(buffer.length() - 2);
+                method.addAnnotation("@SelectKey(" + buffer.toString().trim() + ")");
+            }
+
             if (null != operation.getOptions() && operation.getOptions().size() > 0) {
                 importedTypes.add(new FullyQualifiedJavaType("org.apache.ibatis.annotations.Options"));
 

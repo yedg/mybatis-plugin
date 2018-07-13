@@ -86,6 +86,17 @@
             </xsd:sequence>
         </xsd:complexType>
     </xsd:element>
+
+    <xsd:element name="selectKey">
+        <xsd:complexType>
+            <xsd:attribute name="statement" type="xsd:string" use="required" />
+            <xsd:attribute name="keyProperty" type="xsd:string" use="required" />
+            <xsd:attribute name="keyColumn" type="xsd:string" />
+            <xsd:attribute name="before" type="xsd:boolean" default="false" />
+            <xsd:attribute name="resultType" type="JavaFullClassName" use="required"/>
+            <xsd:attribute name="statementType" type="JavaFullClassName" />
+        </xsd:complexType>
+    </xsd:element>
     
     <xsd:element name="sql" type="Sql">
         <xsd:annotation>
@@ -116,6 +127,7 @@
                 <xsd:element ref="comment" minOccurs="0" maxOccurs="1" />
                 <xsd:element ref="params" minOccurs="0" maxOccurs="1" />
                 <xsd:element ref="options" minOccurs="0" maxOccurs="1" />
+                <xsd:element ref="selectKey" minOccurs="0" maxOccurs="1" />
                 <xsd:element ref="result" minOccurs="0" maxOccurs="1"/>
                 <xsd:element ref="sql" minOccurs="1" maxOccurs="1" />
             </xsd:sequence>
