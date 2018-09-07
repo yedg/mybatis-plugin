@@ -191,11 +191,13 @@ public class SqlTempleatePluginAdapter extends PluginAdapter {
                     buffer.append("\", ");
                 }
 
-                if (null != dbSelectKey.getBefore()) {
-                    buffer.append("before=");
-                    buffer.append(dbSelectKey.getBefore());
-                    buffer.append(", ");
+                String before = dbSelectKey.getBefore();
+                if (null == before) {
+                    before = "false";
                 }
+                buffer.append("before=");
+                buffer.append(before);
+                buffer.append(", ");
 
                 if (null != dbSelectKey.getKeyColumn()) {
                     buffer.append("keyColumn=");
@@ -208,13 +210,12 @@ public class SqlTempleatePluginAdapter extends PluginAdapter {
                 String resultType = dbSelectKey.getResultType();
                 if (null != resultType) {
                     buffer.append("resultType=");
-                    buffer.append("\"");
                     if (resultType.endsWith(".class")) {
                         buffer.append(resultType);
                     } else {
                         buffer.append(resultType + ".class");
                     }
-                    buffer.append("\", ");
+                    buffer.append(", ");
                 }
 
                 if (null != dbSelectKey.getStatementType()) {

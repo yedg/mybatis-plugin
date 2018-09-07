@@ -510,8 +510,12 @@ public final class SqlTemplateParserUtil {
         }
         final int type = JdbcTypeNameTranslator.getJdbcType(jdbcType);
         switch (type) {
-            case Types.TINYINT:
-            case Types.SMALLINT:
+            case Types.TINYINT: {
+                return new FullyQualifiedJavaType(Byte.class.getName());
+            }
+            case Types.SMALLINT:{
+                return new FullyQualifiedJavaType(Short.class.getName());
+            }
             case Types.INTEGER: {
                 return new FullyQualifiedJavaType(Integer.class.getName());
             }
@@ -529,6 +533,7 @@ public final class SqlTemplateParserUtil {
                 return new FullyQualifiedJavaType(Float.class.getName());
             }
             case Types.CHAR:
+            case Types.NCHAR:
             case Types.VARCHAR:
             case Types.NVARCHAR:
             case Types.LONGVARCHAR:

@@ -26,6 +26,7 @@ public class MyBatisIntrospectedTableImpl extends IntrospectedTableMyBatis3Impl 
         sb.append(fullyQualifiedTable.getDomainObjectName());
         sb.append(filterDoSuffix());
         sb.append("Key");
+        setPrimaryKeyType(sb.toString());
 
         sb.setLength(0);
         sb.append(pakkage);
