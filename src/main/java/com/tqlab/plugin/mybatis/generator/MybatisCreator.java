@@ -35,13 +35,14 @@ public interface MybatisCreator {
      * @param dalPackage
      * @param dir
      * @param overwrite
+     * @param providerEnable
      * @param dbTables
-     * @param tables       Specific the tables to create MYBATIS configuration. If tables is null, all tables in the
-     *                     database will be used.
+     * @param tables         Specific the tables to create MYBATIS configuration. If tables is null, all tables in the
+     *                       database will be used.
      * @return
      */
     List<MybatisBean> create(Database database, String url, String objectSuffix, String doRootClass,
                              String databaseName, String userName, String password, String dalPackage, String dir,
-                             boolean overwrite,
+                             boolean overwrite, boolean providerEnable,
                              final Map<String, DbTable> dbTables, String... tables);
 }

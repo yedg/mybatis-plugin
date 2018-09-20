@@ -24,6 +24,8 @@ import static org.mybatis.generator.internal.util.messages.Messages.getString;
  */
 public class MybatisAnnotatedClientGenerator extends AnnotatedClientGenerator {
 
+    private static final String PROVIDER_ENABLE = "providerEnable";
+
     public MybatisAnnotatedClientGenerator() {
         super();
     }
@@ -56,18 +58,26 @@ public class MybatisAnnotatedClientGenerator extends AnnotatedClientGenerator {
             interfaze.addImportedType(fqjt);
         }
 
+        String providerEnable = context.getJavaClientGeneratorConfiguration().getProperty(
+            PROVIDER_ENABLE);
+        boolean providerEnableB = null != providerEnable && Boolean.parseBoolean(providerEnable);
+
         // addCountByExampleMethod(interfaze);
         // addDeleteByExampleMethod(interfaze);
         addDeleteByPrimaryKeyMethod(interfaze);
         addInsertMethod(interfaze);
-        addInsertSelectiveMethod(interfaze);
+        if (providerEnableB) {
+            addInsertSelectiveMethod(interfaze);
+        }
         // addSelectByExampleWithBLOBsMethod(interfaze);
         // addSelectByExampleWithoutBLOBsMethod(interfaze);
         addSelectByPrimaryKeyMethod(interfaze);
         // addUpdateByExampleSelectiveMethod(interfaze);
         // addUpdateByExampleWithBLOBsMethod(interfaze);
         // addUpdateByExampleWithoutBLOBsMethod(interfaze);
-        addUpdateByPrimaryKeySelectiveMethod(interfaze);
+        if (providerEnableB) {
+            addUpdateByPrimaryKeySelectiveMethod(interfaze);
+        }
         addUpdateByPrimaryKeyWithBLOBsMethod(interfaze);
         addUpdateByPrimaryKeyWithoutBLOBsMethod(interfaze);
 
@@ -86,18 +96,27 @@ public class MybatisAnnotatedClientGenerator extends AnnotatedClientGenerator {
 
     @Override
     public List<CompilationUnit> getExtraCompilationUnits() {
-        boolean useLegacyBuilder = false;
 
-        String prop = context.getJavaClientGeneratorConfiguration()
-            .getProperty(PropertyRegistry.CLIENT_USE_LEGACY_BUILDER);
-        if (StringUtility.stringHasValue(prop)) {
-            useLegacyBuilder = Boolean.valueOf(prop);
+        String providerEnable = context.getJavaClientGeneratorConfiguration().getProperty(
+            PROVIDER_ENABLE);
+        boolean providerEnableB = null != providerEnable && Boolean.parseBoolean(providerEnable);
+        if (providerEnableB) {
+            boolean useLegacyBuilder = false;
+
+            String prop = context.getJavaClientGeneratorConfiguration()
+                .getProperty(PropertyRegistry.CLIENT_USE_LEGACY_BUILDER);
+            if (StringUtility.stringHasValue(prop)) {
+                useLegacyBuilder = Boolean.valueOf(prop);
+            }
+            SqlProviderGenerator sqlProviderGenerator = new MybatisSqlProviderGenerator(useLegacyBuilder);
+            sqlProviderGenerator.setContext(context);
+            sqlProviderGenerator.setIntrospectedTable(introspectedTable);
+            sqlProviderGenerator.setProgressCallback(progressCallback);
+            sqlProviderGenerator.setWarnings(warnings);
+            return sqlProviderGenerator.getCompilationUnits();
+        } else {
+            return new ArrayList<CompilationUnit>();
         }
-        SqlProviderGenerator sqlProviderGenerator = new MybatisSqlProviderGenerator(useLegacyBuilder);
-        sqlProviderGenerator.setContext(context);
-        sqlProviderGenerator.setIntrospectedTable(introspectedTable);
-        sqlProviderGenerator.setProgressCallback(progressCallback);
-        sqlProviderGenerator.setWarnings(warnings);
-        return sqlProviderGenerator.getCompilationUnits();
+
     }
 }

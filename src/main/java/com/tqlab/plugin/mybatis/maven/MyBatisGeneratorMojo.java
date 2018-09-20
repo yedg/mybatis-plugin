@@ -160,6 +160,12 @@ public class MyBatisGeneratorMojo extends AbstractMojo {
     private String generateOsgiConfig;
 
     /**
+     * Generate mapper with SQL Provider
+     */
+    @Parameter(property = "mybatis.generator.providerEnable", defaultValue = "true")
+    private String providerEnable;
+
+    /**
      * Extra config.
      */
     @Parameter
@@ -413,6 +419,7 @@ public class MyBatisGeneratorMojo extends AbstractMojo {
         config.setDoRootClass(doRootClass);
         config.setUseCache(useCache);
         config.setPackages(packages);
+        config.setProviderEnable(providerEnable);
         list.add(config);
         if (null != databaseConfig) {
             list.addAll(databaseConfig);

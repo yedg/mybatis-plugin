@@ -54,6 +54,7 @@ public class MybatisCreatorImpl implements MybatisCreator {
                                     final String doRootClass, final String databaseName, final String userName,
                                     final String password,
                                     final String dalPackage, final String outputDir, final boolean overwrite,
+                                    final boolean providerEnable,
                                     final Map<String, DbTable> dbTables, final String... tableNames) {
 
         List<String> tableList = new ArrayList<String>();
@@ -204,6 +205,9 @@ public class MybatisCreatorImpl implements MybatisCreator {
                 + dalPackage + ".dao\"" + " targetProject=\"" + java + "\">");
         sb.append(Constants.LINE_SEPARATOR);
         sb.append("      <property name=\"enableSubPackages\" value=\"true\" />");
+        sb.append(Constants.LINE_SEPARATOR);
+        sb.append("      <property name=\"providerEnable\" value=\""+providerEnable+"\" />");
+
         sb.append(Constants.LINE_SEPARATOR);
         sb.append("    </javaClientGenerator >");
         sb.append(Constants.LINE_SEPARATOR);

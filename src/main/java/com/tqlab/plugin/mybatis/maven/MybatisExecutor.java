@@ -90,7 +90,8 @@ public class MybatisExecutor {
         MybatisCreator creater = new MybatisCreatorImpl(properties);
         List<MybatisBean> list = creater.create(databaseObj, getJDBCUrl(), config.getDoSuffix(),
             config.getDoRootClass(), config.getDatabase(), config.getJdbcUserId(), getJDBCPassword(), packages,
-            outputDirectory.getAbsolutePath(), overwrite, getDbTables(), tablesArray);
+            outputDirectory.getAbsolutePath(), overwrite, Boolean.parseBoolean(config.getProviderEnable()),
+            getDbTables(), tablesArray);
         if (null == list || list.size() == 0) {
             return;
         }

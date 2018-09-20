@@ -29,6 +29,7 @@ public class DatabaseConfig {
     private String generateSpringConfig;
     private String generateOsgiConfig;
     private String useCache;
+    private String providerEnable;
     private Properties properties;
 
     /**
@@ -295,6 +296,14 @@ public class DatabaseConfig {
      */
     public final void setProperties(Properties properties) {
         this.properties = properties;
+    }
+
+    public String getProviderEnable() {
+        return providerEnable;
+    }
+
+    public void setProviderEnable(String providerEnable) {
+        this.providerEnable = providerEnable;
     }
 
     public String getGenerateSpringBoot() {

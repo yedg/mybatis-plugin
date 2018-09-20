@@ -20,7 +20,7 @@ Single database:
 			<plugin>
 				<groupId>com.tqlab.plugin</groupId>
 				<artifactId>tqlab-mybatis-plugin</artifactId>
-				<version>1.0.7</version>
+				<version>1.0.8</version>
 				<executions>
 					<execution>
 						<id>Generate MyBatis Artifacts</id>
@@ -60,7 +60,7 @@ Multi-database:
 			<plugin>
 				<groupId>com.tqlab.plugin</groupId>
 				<artifactId>tqlab-mybatis-plugin</artifactId>
-				<version>1.0.6</version>
+				<version>1.0.8</version>
 				<executions>
 					<execution>
 						<id>Generate MyBatis Artifacts</id>
@@ -131,6 +131,7 @@ packages		|Java package name, com.tqlab.test etc.||true
 overwrite		| Overwrite the exist code, config file or not.|false|false
 sqlTemplatePath	|SqlMapper template path||true
 useCache|Use cache or not.|false|false
+providerEnable|Generate default SQL Provider or not.|true|false
 generateSpringConfig|Generate spring osgi xml config file or not.| false|false
 generateOsgiConfig|Generate spring osgi xml config file or not.|false|false
 properties|extra config||false
@@ -278,3 +279,6 @@ More sample: [https://github.com/tqlab/mybatis-plugin/blob/master/demo/src/main/
 ### v1.0.8
 1. update jsqlparser version to 1.2
 2. Add @SelectKey supported
+
+### v1.0.9
+1. add Provider annotation config (providerEnable default true).
