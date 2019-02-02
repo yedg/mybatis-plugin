@@ -281,4 +281,7 @@ More sample: [https://github.com/tqlab/mybatis-plugin/blob/master/demo/src/main/
 2. Add @SelectKey supported
 
 ### v1.0.9
-1. add Provider annotation config (providerEnable default true).
+1. Add Provider annotation config (providerEnable default true).
+2. bugfix generatedKey
+3. update mybatis to 3.5.0
+4. update jsqlparser version to 1.4

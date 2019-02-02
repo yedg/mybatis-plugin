@@ -77,18 +77,18 @@ public class MysqlDatabase extends AbstractDatabase {
 
             List<String> autoIncrementColumn = new ArrayList<String>();
             while (res.next()) {
-                final String column = getColumnName(res.getString("Field"));
+                String column = getColumnName(res.getString("Field"));
+                column = column.replaceAll("`", "");
                 columns.add(column);
                 if ("auto_increment".equalsIgnoreCase(res.getString("Extra"))) {
                     autoIncrementColumn.add(column);
                 }
 
                 if ("PRI".equalsIgnoreCase(res.getString("Key"))) {
-                    String primaryKey = res.getString("Key");
-                    if (autoIncrementColumn.contains(primaryKey)) {
-                        autoIncrementPK.add(primaryKey);
+                    if (autoIncrementColumn.contains(column)) {
+                        autoIncrementPK.add(column);
                     }
-                    primaryKeys.add(primaryKey);
+                    primaryKeys.add(column);
                 }
             }
 
