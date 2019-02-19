@@ -17,29 +17,8 @@ import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author John Lee
- *
  */
 public enum DatabaseEnum {
-
-    /**
-     * Cloudscape
-     */
-    CLOUDSCAPE("Cloudscape"),
-
-    /**
-     * DB2
-     */
-    DB2("DB2"),
-
-    /**
-     * DB2_MF
-     */
-    DB2_MF("DB2_MF"),
-
-    /**
-     * Derby
-     */
-    DERBY("Derby"),
 
     /**
      * HSQLDB
@@ -52,19 +31,9 @@ public enum DatabaseEnum {
     MYSQL("MySql"),
 
     /**
-     * SqlServer
+     * OceanBase
      */
-    SQLSERVER("SqlServer"),
-
-    /**
-     * SYBASE
-     */
-    SYBASE("SYBASE"),
-
-    /**
-     * JDBC
-     */
-    DEFAULT("JDBC");
+    OB("OB");
 
     /**
      *
@@ -91,15 +60,13 @@ public enum DatabaseEnum {
     }
 
     /**
-     * @param sqlStatement
-     *            the sqlStatement to set
+     * @param sqlStatement the sqlStatement to set
      */
     public final void setSqlStatement(String sqlStatement) {
         this.sqlStatement = sqlStatement;
     }
 
     /**
-     *
      * @param sqlStatement
      * @return
      */

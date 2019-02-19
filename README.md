@@ -285,3 +285,6 @@ More sample: [https://github.com/tqlab/mybatis-plugin/blob/master/demo/src/main/
 2. bugfix generatedKey
 3. update mybatis to 3.5.0
 4. update jsqlparser version to 1.4
+
+### v1.0.10
+1. Add connectionFactory plugin supported.

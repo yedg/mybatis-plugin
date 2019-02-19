@@ -16,10 +16,10 @@ import com.tqlab.plugin.mybatis.MybatisPluginException;
 import org.apache.commons.lang.StringUtils;
 
 import java.util.Properties;
+import java.util.ServiceLoader;
 
 /**
  * @author John Lee
- *
  */
 public class DatabaseFactoryImpl implements DatabaseFactory {
 
@@ -40,6 +40,7 @@ public class DatabaseFactoryImpl implements DatabaseFactory {
             }
             default: {
                 //
+                result = load();
                 break;
             }
         }
@@ -48,9 +49,26 @@ public class DatabaseFactoryImpl implements DatabaseFactory {
                 result.setDriverClass(driver);
             }
 
+            result.setUrl(url);
+            result.setProperties(properties);
+            result.setDatabase(database);
+
             return result;
         }
         throw new MybatisPluginException("database " + databaseEnum.name()
             + " not supported.");
+    }
+
+    /**
+     * Creates a new service with service loader.
+     *
+     * @return
+     */
+    private AbstractDatabase load() {
+        ServiceLoader<Database> serviceLoader = ServiceLoader.load(Database.class, Database.class.getClassLoader());
+        for (Database service : serviceLoader) {
+            return (AbstractDatabase)service;
+        }
+        return null;
     }
 }

@@ -29,13 +29,17 @@ public abstract class AbstractDatabase implements Database {
     protected static final Logger LOGGER = Logger.getLogger(AbstractDatabase.class);
 
     private String driverClass;
-    private final transient String database;
-    private final transient String url;
-    private final Properties properties;
+    private String database;
+    private String url;
+    private Properties properties;
     /**
      * Database connection
      */
     private transient Connection conn;
+
+    public AbstractDatabase() {
+
+    }
 
     /**
      * @param driverClass
@@ -64,6 +68,26 @@ public abstract class AbstractDatabase implements Database {
      */
     public final void setDriverClass(String driverClass) {
         this.driverClass = driverClass;
+    }
+
+    public final void setDatabase(String database) {
+        this.database = database;
+    }
+
+    public final String getUrl() {
+        return url;
+    }
+
+    public final void setUrl(String url) {
+        this.url = url;
+    }
+
+    public final Properties getProperties() {
+        return properties;
+    }
+
+    public final void setProperties(Properties properties) {
+        this.properties = properties;
     }
 
     /**
@@ -186,5 +210,4 @@ public abstract class AbstractDatabase implements Database {
             }
         }
     }
-
 }

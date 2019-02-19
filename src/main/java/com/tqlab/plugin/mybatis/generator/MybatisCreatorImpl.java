@@ -12,6 +12,7 @@
  */
 package com.tqlab.plugin.mybatis.generator;
 
+import com.tqlab.plugin.mybatis.database.AbstractDatabase;
 import com.tqlab.plugin.mybatis.database.ColumnResult;
 import com.tqlab.plugin.mybatis.database.Database;
 import com.tqlab.plugin.mybatis.database.DatabaseEnum;
@@ -20,6 +21,7 @@ import com.tqlab.plugin.mybatis.util.Constants;
 import com.tqlab.plugin.mybatis.util.TableUtil;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.mybatis.generator.api.ConnectionFactory;
 import org.mybatis.generator.api.MyBatisGenerator;
 import org.mybatis.generator.config.Configuration;
 import org.mybatis.generator.config.xml.ConfigurationParser;
@@ -147,26 +149,48 @@ public class MybatisCreatorImpl implements MybatisCreator {
         sb.append("    </commentGenerator>");
         sb.append(Constants.LINE_SEPARATOR);
         sb.append(Constants.LINE_SEPARATOR);
-        sb.append("    <jdbcConnection driverClass=\"" + database.getDriverClass() + "\"");
-        sb.append(Constants.LINE_SEPARATOR);
-        sb.append("      connectionURL=\"" + url + "\"");
-        sb.append(Constants.LINE_SEPARATOR);
-        sb.append("      userId=\"" + userName + "\"");
-        sb.append(Constants.LINE_SEPARATOR);
-        sb.append("      password=\"" + password + "\">");
-        sb.append(Constants.LINE_SEPARATOR);
-        if (null != properties) {
-            Set<Entry<Object, Object>> set = properties.entrySet();
-            for (Iterator<Entry<Object, Object>> i = set.iterator(); i.hasNext(); ) {
-                Entry<Object, Object> e = i.next();
-                sb.append("      <property name=\"" + e.getKey() + "\" value=\"" + e.getValue() + "\" />");
-                sb.append(Constants.LINE_SEPARATOR);
-            }
-        }
-        sb.append("      <property name=\"nullCatalogMeansCurrent\" value=\"true\" />");
-        sb.append(Constants.LINE_SEPARATOR);
 
-        sb.append("    </jdbcConnection>");
+        // org.mybatis.generator.api.ConnectionFactory
+        ServiceLoader<ConnectionFactory> serviceLoader = ServiceLoader.load(ConnectionFactory.class, ConnectionFactory.class.getClassLoader());
+        ConnectionFactory connectionFactory = null;
+        for (ConnectionFactory service : serviceLoader) {
+            connectionFactory= service;
+        }
+        if (null!=connectionFactory){
+            sb.append("    <connectionFactory type=\""+connectionFactory.getClass().getCanonicalName()+"\" >");
+            sb.append(Constants.LINE_SEPARATOR);
+            sb.append("      <property name=\"driverClass\" value=\""+database.getDriverClass()+"\" />");
+            sb.append(Constants.LINE_SEPARATOR);
+            sb.append("      <property name=\"userId\" value=\""+userName+"\" />");
+            sb.append(Constants.LINE_SEPARATOR);
+            sb.append("      <property name=\"password\" value=\""+password+"\" />");
+            sb.append(Constants.LINE_SEPARATOR);
+            sb.append("      <property name=\"connectionURL\" value=\""+url+"\" />");
+            sb.append(Constants.LINE_SEPARATOR);
+            sb.append("    </connectionFactory>");
+        }else{
+            sb.append("    <jdbcConnection driverClass=\"" + database.getDriverClass() + "\"");
+            sb.append(Constants.LINE_SEPARATOR);
+            sb.append("      connectionURL=\"" + url + "\"");
+            sb.append(Constants.LINE_SEPARATOR);
+            sb.append("      userId=\"" + userName + "\"");
+            sb.append(Constants.LINE_SEPARATOR);
+            sb.append("      password=\"" + password + "\">");
+            sb.append(Constants.LINE_SEPARATOR);
+            if (null != properties) {
+                Set<Entry<Object, Object>> set = properties.entrySet();
+                for (Iterator<Entry<Object, Object>> i = set.iterator(); i.hasNext(); ) {
+                    Entry<Object, Object> e = i.next();
+                    sb.append("      <property name=\"" + e.getKey() + "\" value=\"" + e.getValue() + "\" />");
+                    sb.append(Constants.LINE_SEPARATOR);
+                }
+            }
+            sb.append("      <property name=\"nullCatalogMeansCurrent\" value=\"true\" />");
+            sb.append(Constants.LINE_SEPARATOR);
+
+            sb.append("    </jdbcConnection>");
+        }
+        //
         sb.append(Constants.LINE_SEPARATOR);
         sb.append(Constants.LINE_SEPARATOR);
         sb.append("    <javaTypeResolver >");
