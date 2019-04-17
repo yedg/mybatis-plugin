@@ -350,16 +350,18 @@ public class MybatisCreatorImpl implements MybatisCreator {
         buf.append("enableUpdateByExample=\"false\">");
         buf.append(Constants.LINE_SEPARATOR);
 
-        final List<String> list = result.getAutoIncrementPrimaryKeys();
-        for (String key : list) {
-            buf.append("      <generatedKey column=\"");
-            buf.append(key);
-            buf.append("\" ");
-            buf.append("sqlStatement=\"");
-            buf.append(dbEnum.getSqlStatement());
-            buf.append("\" ");
-            buf.append("identity=\"true\" />");
-            buf.append(Constants.LINE_SEPARATOR);
+        if(null!=dbEnum.getSqlStatement()) {
+            final List<String> list = result.getAutoIncrementPrimaryKeys();
+            for (String key : list) {
+                buf.append("      <generatedKey column=\"");
+                buf.append(key);
+                buf.append("\" ");
+                buf.append("sqlStatement=\"");
+                buf.append(dbEnum.getSqlStatement());
+                buf.append("\" ");
+                buf.append("identity=\"true\" />");
+                buf.append(Constants.LINE_SEPARATOR);
+            }
         }
         buf.append("    </table>");
         buf.append(Constants.LINE_SEPARATOR);

@@ -23,17 +23,17 @@ public enum DatabaseEnum {
     /**
      * HSQLDB
      */
-    HSQLDB("HSQLDB"),
+    HSQLDB("HSQLDB", "CALL IDENTITY()"),
 
     /**
      *
      */
-    MYSQL("MySql"),
+    MYSQL("MySql", "SELECT LAST_INSERT_ID()"),
 
     /**
      * OceanBase
      */
-    OB("OB");
+    OB("OB", "");
 
     /**
      *
@@ -42,13 +42,15 @@ public enum DatabaseEnum {
 
     static {
         for (DatabaseEnum databaseEnum : DatabaseEnum.values()) {
-            CACHE.put(databaseEnum.sqlStatement.toLowerCase(), databaseEnum);
+            CACHE.put(databaseEnum.name.toLowerCase(), databaseEnum);
         }
     }
 
+    private String name;
     private String sqlStatement;
 
-    private DatabaseEnum(String sqlStatement) {
+    DatabaseEnum(String name, String sqlStatement) {
+        this.name = name;
         this.sqlStatement = sqlStatement;
     }
 
@@ -60,20 +62,13 @@ public enum DatabaseEnum {
     }
 
     /**
-     * @param sqlStatement the sqlStatement to set
-     */
-    public final void setSqlStatement(String sqlStatement) {
-        this.sqlStatement = sqlStatement;
-    }
-
-    /**
-     * @param sqlStatement
+     * @param name
      * @return
      */
-    public final static DatabaseEnum getDatabaseEnum(String sqlStatement) {
-        if (null == sqlStatement) {
+    public final static DatabaseEnum getDatabaseEnum(String name) {
+        if (null == name) {
             return null;
         }
-        return CACHE.get(sqlStatement.toLowerCase());
+        return CACHE.get(name.toLowerCase());
     }
 }
