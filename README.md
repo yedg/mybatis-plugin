@@ -6,7 +6,7 @@ Mybatis Generator Plugin
 <dependency>
     <groupId>com.tqlab.plugin</groupId>
     <artifactId>tqlab-mybatis-plugin</artifactId>
-    <version>1.0.8</version>
+    <version>1.0.9</version>
 </dependency>
 ```
 
