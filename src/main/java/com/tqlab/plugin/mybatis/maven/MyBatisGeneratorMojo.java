@@ -166,6 +166,12 @@ public class MyBatisGeneratorMojo extends AbstractMojo {
     private String providerEnable;
 
     /**
+     * Generate mapper with SelectKey
+     */
+    @Parameter(property = "mybatis.generator.selectKeyEnable", defaultValue = "true")
+    private String selectKeyEnable;
+
+    /**
      * Extra config.
      */
     @Parameter
@@ -420,6 +426,7 @@ public class MyBatisGeneratorMojo extends AbstractMojo {
         config.setUseCache(useCache);
         config.setPackages(packages);
         config.setProviderEnable(providerEnable);
+        config.setSelectKeyEnable(selectKeyEnable);
         list.add(config);
         if (null != databaseConfig) {
             list.addAll(databaseConfig);

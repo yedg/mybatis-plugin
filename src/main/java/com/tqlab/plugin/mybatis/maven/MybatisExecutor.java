@@ -87,10 +87,11 @@ public class MybatisExecutor {
         }
 
         String[] tablesArray = fullyqualifiedTables.toArray(new String[0]);
-        MybatisCreator creater = new MybatisCreatorImpl(properties);
-        List<MybatisBean> list = creater.create(databaseObj, getJDBCUrl(), config.getDoSuffix(),
+        MybatisCreator creator = new MybatisCreatorImpl(properties);
+        List<MybatisBean> list = creator.create(databaseObj, getJDBCUrl(), config.getDoSuffix(),
             config.getDoRootClass(), config.getDatabase(), config.getJdbcUserId(), getJDBCPassword(), packages,
             outputDirectory.getAbsolutePath(), overwrite, Boolean.parseBoolean(config.getProviderEnable()),
+            Boolean.parseBoolean(config.getSelectKeyEnable()),
             getDbTables(), tablesArray);
         if (null == list || list.size() == 0) {
             return;

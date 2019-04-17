@@ -132,6 +132,7 @@ overwrite		| Overwrite the exist code, config file or not.|false|false
 sqlTemplatePath	|SqlMapper template path||true
 useCache|Use cache or not.|false|false
 providerEnable|Generate default SQL Provider or not.|true|false
+selectKeyEnable|Generate @SelectKey or not.|true|false
 generateSpringConfig|Generate spring osgi xml config file or not.| false|false
 generateOsgiConfig|Generate spring osgi xml config file or not.|false|false
 properties|extra config||false
@@ -288,3 +289,4 @@ More sample: [https://github.com/tqlab/mybatis-plugin/blob/master/demo/src/main/
 
 ### v1.0.10
 1. Add connectionFactory plugin supported.
+2. Add selectKeyEnable config supported.

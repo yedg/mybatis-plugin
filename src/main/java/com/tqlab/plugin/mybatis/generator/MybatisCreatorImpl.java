@@ -57,6 +57,7 @@ public class MybatisCreatorImpl implements MybatisCreator {
                                     final String password,
                                     final String dalPackage, final String outputDir, final boolean overwrite,
                                     final boolean providerEnable,
+                                    final boolean selectKeyEnable,
                                     final Map<String, DbTable> dbTables, final String... tableNames) {
 
         List<String> tableList = new ArrayList<String>();
@@ -95,7 +96,7 @@ public class MybatisCreatorImpl implements MybatisCreator {
         StringBuffer buf = new StringBuffer();
 
         for (final String name : tables) {
-            buf.append(getTableString(database.getDatabaseEnum(), database, name));
+            buf.append(getTableString(database.getDatabaseEnum(), database, name, selectKeyEnable));
         }
         database.close();
 
@@ -151,24 +152,25 @@ public class MybatisCreatorImpl implements MybatisCreator {
         sb.append(Constants.LINE_SEPARATOR);
 
         // org.mybatis.generator.api.ConnectionFactory
-        ServiceLoader<ConnectionFactory> serviceLoader = ServiceLoader.load(ConnectionFactory.class, ConnectionFactory.class.getClassLoader());
+        ServiceLoader<ConnectionFactory> serviceLoader = ServiceLoader.load(ConnectionFactory.class,
+            ConnectionFactory.class.getClassLoader());
         ConnectionFactory connectionFactory = null;
         for (ConnectionFactory service : serviceLoader) {
-            connectionFactory= service;
+            connectionFactory = service;
         }
-        if (null!=connectionFactory){
-            sb.append("    <connectionFactory type=\""+connectionFactory.getClass().getCanonicalName()+"\" >");
+        if (null != connectionFactory) {
+            sb.append("    <connectionFactory type=\"" + connectionFactory.getClass().getCanonicalName() + "\" >");
             sb.append(Constants.LINE_SEPARATOR);
-            sb.append("      <property name=\"driverClass\" value=\""+database.getDriverClass()+"\" />");
+            sb.append("      <property name=\"driverClass\" value=\"" + database.getDriverClass() + "\" />");
             sb.append(Constants.LINE_SEPARATOR);
-            sb.append("      <property name=\"userId\" value=\""+userName+"\" />");
+            sb.append("      <property name=\"userId\" value=\"" + userName + "\" />");
             sb.append(Constants.LINE_SEPARATOR);
-            sb.append("      <property name=\"password\" value=\""+password+"\" />");
+            sb.append("      <property name=\"password\" value=\"" + password + "\" />");
             sb.append(Constants.LINE_SEPARATOR);
-            sb.append("      <property name=\"connectionURL\" value=\""+url+"\" />");
+            sb.append("      <property name=\"connectionURL\" value=\"" + url + "\" />");
             sb.append(Constants.LINE_SEPARATOR);
             sb.append("    </connectionFactory>");
-        }else{
+        } else {
             sb.append("    <jdbcConnection driverClass=\"" + database.getDriverClass() + "\"");
             sb.append(Constants.LINE_SEPARATOR);
             sb.append("      connectionURL=\"" + url + "\"");
@@ -230,7 +232,7 @@ public class MybatisCreatorImpl implements MybatisCreator {
         sb.append(Constants.LINE_SEPARATOR);
         sb.append("      <property name=\"enableSubPackages\" value=\"true\" />");
         sb.append(Constants.LINE_SEPARATOR);
-        sb.append("      <property name=\"providerEnable\" value=\""+providerEnable+"\" />");
+        sb.append("      <property name=\"providerEnable\" value=\"" + providerEnable + "\" />");
 
         sb.append(Constants.LINE_SEPARATOR);
         sb.append("    </javaClientGenerator >");
@@ -313,7 +315,8 @@ public class MybatisCreatorImpl implements MybatisCreator {
         return null;
     }
 
-    private String getTableString(final DatabaseEnum dbEnum, final Database database, final String tableName) {
+    private String getTableString(final DatabaseEnum dbEnum, final Database database, final String tableName,
+                                  final boolean selectKeyEnable) {
 
         LOGGER.info("getTableString >>> " + TableHolder.getTableAlias(tableName));
 
@@ -350,7 +353,7 @@ public class MybatisCreatorImpl implements MybatisCreator {
         buf.append("enableUpdateByExample=\"false\">");
         buf.append(Constants.LINE_SEPARATOR);
 
-        if(null!=dbEnum.getSqlStatement()) {
+        if (selectKeyEnable && StringUtils.isNotBlank(dbEnum.getSqlStatement())) {
             final List<String> list = result.getAutoIncrementPrimaryKeys();
             for (String key : list) {
                 buf.append("      <generatedKey column=\"");

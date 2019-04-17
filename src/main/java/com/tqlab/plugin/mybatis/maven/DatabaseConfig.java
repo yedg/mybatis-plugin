@@ -30,6 +30,7 @@ public class DatabaseConfig {
     private String generateOsgiConfig;
     private String useCache;
     private String providerEnable;
+    private String selectKeyEnable;
     private Properties properties;
 
     /**
@@ -299,11 +300,25 @@ public class DatabaseConfig {
     }
 
     public String getProviderEnable() {
+        if (null == providerEnable) {
+            return "true";
+        }
         return providerEnable;
     }
 
     public void setProviderEnable(String providerEnable) {
         this.providerEnable = providerEnable;
+    }
+
+    public final String getSelectKeyEnable() {
+        if (null == selectKeyEnable) {
+            return "true";
+        }
+        return selectKeyEnable;
+    }
+
+    public final void setSelectKeyEnable(String selectKeyEnable) {
+        this.selectKeyEnable = selectKeyEnable;
     }
 
     public String getGenerateSpringBoot() {
