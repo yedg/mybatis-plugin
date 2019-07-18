@@ -12,7 +12,7 @@ import com.tqlab.plugin.mybatis.generator.MybatisCreator;
 import com.tqlab.plugin.mybatis.generator.MybatisCreatorImpl;
 import com.tqlab.plugin.mybatis.util.Constants;
 import com.tqlab.plugin.mybatis.util.SqlTemplateParserUtil;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.logging.Log;
 import org.mybatis.generator.internal.util.StringUtility;

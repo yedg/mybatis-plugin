@@ -17,7 +17,7 @@ package com.tqlab.plugin.mybatis.maven;
 
 import com.tqlab.plugin.mybatis.util.Constants;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.PropertyConfigurator;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;

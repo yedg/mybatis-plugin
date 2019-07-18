@@ -1,6 +1,6 @@
 package com.tqlab.plugin.mybatis.util;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.mybatis.generator.api.dom.java.Interface;
 
 /**

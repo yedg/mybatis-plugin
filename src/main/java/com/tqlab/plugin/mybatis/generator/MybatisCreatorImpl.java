@@ -12,14 +12,13 @@
  */
 package com.tqlab.plugin.mybatis.generator;
 
-import com.tqlab.plugin.mybatis.database.AbstractDatabase;
 import com.tqlab.plugin.mybatis.database.ColumnResult;
 import com.tqlab.plugin.mybatis.database.Database;
 import com.tqlab.plugin.mybatis.database.DatabaseEnum;
 import com.tqlab.plugin.mybatis.generator.config.Config;
 import com.tqlab.plugin.mybatis.util.Constants;
 import com.tqlab.plugin.mybatis.util.TableUtil;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.mybatis.generator.api.ConnectionFactory;
 import org.mybatis.generator.api.MyBatisGenerator;

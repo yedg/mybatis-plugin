@@ -13,7 +13,7 @@
 package com.tqlab.plugin.mybatis.database;
 
 import com.tqlab.plugin.mybatis.MybatisPluginException;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.Properties;
 import java.util.ServiceLoader;
