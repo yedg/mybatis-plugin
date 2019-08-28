@@ -17,6 +17,14 @@ import java.util.List;
 public class MyBatisIntrospectedTableImpl extends IntrospectedTableMyBatis3Impl {
 
     @Override
+    protected void calculateXmlAttributes() {
+        super.calculateXmlAttributes();
+        setUpdateByPrimaryKeyWithBLOBsStatementId("updateByPrimaryKeyWithBlobs");
+        setUpdateByExampleWithBLOBsStatementId("updateByExampleWithBlobs");
+        setSelectByExampleWithBLOBsStatementId("selectByExampleWithBlobs");
+    }
+
+    @Override
     protected void calculateModelAttributes() {
         String pakkage = calculateJavaModelPackage();
 
