@@ -1,7 +1,7 @@
 package com.tqlab.plugin.mybatis.generator.ext;
 
 import com.tqlab.plugin.mybatis.generator.TableHolder;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.mybatis.generator.api.ProgressCallback;
 import org.mybatis.generator.codegen.AbstractJavaGenerator;
 import org.mybatis.generator.codegen.mybatis3.IntrospectedTableMyBatis3Impl;
@@ -15,6 +15,14 @@ import java.util.List;
  * @author lijun
  */
 public class MyBatisIntrospectedTableImpl extends IntrospectedTableMyBatis3Impl {
+
+    @Override
+    protected void calculateXmlAttributes() {
+        super.calculateXmlAttributes();
+        setUpdateByPrimaryKeyWithBLOBsStatementId("updateByPrimaryKeyWithBlobs");
+        setUpdateByExampleWithBLOBsStatementId("updateByExampleWithBlobs");
+        setSelectByExampleWithBLOBsStatementId("selectByExampleWithBlobs");
+    }
 
     @Override
     protected void calculateModelAttributes() {

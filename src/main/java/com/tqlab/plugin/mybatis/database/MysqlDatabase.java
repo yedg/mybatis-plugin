@@ -25,7 +25,7 @@ import java.util.Properties;
  */
 public class MysqlDatabase extends AbstractDatabase {
 
-    private static final String DRIVER = "com.mysql.jdbc.Driver";
+    private static final String DRIVER = "com.mysql.cj.jdbc.Driver";
     private static final String GRAVE = "`";
 
     /**

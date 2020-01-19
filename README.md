@@ -1,5 +1,8 @@
 Mybatis Generator Plugin
 ==============
+
+中文文档：https://www.lijun.info/tqlab-mybatis-plugin
+
 ## 1. Maven repository
 
 ```
@@ -20,7 +23,7 @@ Single database:
 			<plugin>
 				<groupId>com.tqlab.plugin</groupId>
 				<artifactId>tqlab-mybatis-plugin</artifactId>
-				<version>1.0.8</version>
+				<version>1.0.9</version>
 				<executions>
 					<execution>
 						<id>Generate MyBatis Artifacts</id>
@@ -40,7 +43,7 @@ Single database:
 					<dbName>mysql</dbName>
 					<!-- db config end -->
 					<!-- <sqlScript>${project.basedir}/src/main/resources/mysql.sql</sqlScript> -->
-					<packages>com.taobao.bns.dal</packages>
+					<packages>info.lijun.dal</packages>
 					<sqlTemplatePath>${project.basedir}/src/main/resources/sqltemplate/</sqlTemplatePath>
 					<overwrite>true</overwrite>
 					<useCache>false</useCache>
@@ -60,7 +63,7 @@ Multi-database:
 			<plugin>
 				<groupId>com.tqlab.plugin</groupId>
 				<artifactId>tqlab-mybatis-plugin</artifactId>
-				<version>1.0.8</version>
+				<version>1.0.9</version>
 				<executions>
 					<execution>
 						<id>Generate MyBatis Artifacts</id>
@@ -83,7 +86,7 @@ Multi-database:
 							<dbName>mysql</dbName>
 							<!-- db config end -->
 							<!-- <sqlScript>${project.basedir}/src/main/resources/mysql.sql</sqlScript> -->
-							<packages>com.taobao.bns.dal</packages>
+							<packages>info.lijun.dal</packages>
 							<sqlTemplatePath>${project.basedir}/src/main/resources/sqltemplate/</sqlTemplatePath>
 							<generateJdbcConfig>false</generateJdbcConfig>
 							<generateSpringConfig>true</generateSpringConfig>
@@ -98,7 +101,7 @@ Multi-database:
 							<dbName>mysql</dbName>
 							<!-- db config end -->
 							<!-- <sqlScript>${project.basedir}/src/main/resources/mysql.sql</sqlScript> -->
-							<packages>com.taobao.bns.dal</packages>
+							<packages>info.lijun.dal</packages>
 							<sqlTemplatePath>${project.basedir}/src/main/resources/sqltemplate/</sqlTemplatePath>
 							<generateJdbcConfig>false</generateJdbcConfig>
 							<generateSpringConfig>true</generateSpringConfig>
@@ -127,13 +130,13 @@ doSuffix		|For example, DO, the object name is xxxDO||false
 doRootClass		|Data Object super class||false
 database		|Database			|	|true
 dbName			|Database name, mysql, hsqldb etc.||true
-packages		|Java package name, com.tqlab.test etc.||true
+packages		|Java package name, info.lijun.dal.||true
 overwrite		| Overwrite the exist code, config file or not.|false|false
 sqlTemplatePath	|SqlMapper template path||true
 useCache|Use cache or not.|false|false
 providerEnable|Generate default SQL Provider or not.|true|false
 selectKeyEnable|Generate @SelectKey or not.|true|false
-generateSpringConfig|Generate spring osgi xml config file or not.| false|false
+generateSpringConfig|Generate spring xml config file or not.| false|false
 generateOsgiConfig|Generate spring osgi xml config file or not.|false|false
 properties|extra config||false
 

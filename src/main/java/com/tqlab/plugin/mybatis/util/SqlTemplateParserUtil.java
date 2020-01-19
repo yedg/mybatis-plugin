@@ -333,7 +333,13 @@ public final class SqlTemplateParserUtil {
         dbSelectResult.setObjectName(objectName);
         String basicPackage = context.getJavaModelGeneratorConfiguration().getTargetPackage();
         if (null != objectName) {
-            FullyQualifiedJavaType objectType = new FullyQualifiedJavaType(basicPackage + "." + objectName);
+            String fullJavaType;
+            if (objectName.indexOf('.') > 0) {
+                fullJavaType = objectName;
+            } else {
+                fullJavaType = basicPackage + "." + objectName;
+            }
+            FullyQualifiedJavaType objectType = new FullyQualifiedJavaType(fullJavaType);
 
             dbSelectResult.setType(objectType);
 
@@ -513,7 +519,7 @@ public final class SqlTemplateParserUtil {
             case Types.TINYINT: {
                 return new FullyQualifiedJavaType(Byte.class.getName());
             }
-            case Types.SMALLINT:{
+            case Types.SMALLINT: {
                 return new FullyQualifiedJavaType(Short.class.getName());
             }
             case Types.INTEGER: {
